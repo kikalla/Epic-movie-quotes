@@ -8,11 +8,9 @@
         <option value="en">Eng</option>
         <option value="ka">Geo</option>
       </select>
-      <button
-        class="text-white text-base h-9 bg-[#E31221] rounded-lg w-28 mx-6 font-normal hover:bg-[#CC0E10]"
-      >
-        Sign Up
-      </button>
+      <RedButton class="h-9 w-28 mx-6 rounded-lg" @click="registerRoute()"
+        >Sign Up
+      </RedButton>
       <button
         class="text-white text-base border-white border h-9 rounded-lg w-28 font-normal"
       >
@@ -21,3 +19,12 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import router from "@/router";
+import RedButton from "@/components/ui/RedButton.vue";
+
+function registerRoute() {
+  router.push({ path: "/register" });
+}
+</script>

@@ -1,16 +1,7 @@
 <template>
   <div class="w-full h-full bg-black">
     <PageHeader></PageHeader>
-    <div
-      class="text-white font-bold text-6xl text-center w-[43rem] m-auto pt-80 pb-[34.5rem]"
-    >
-      <h1 class="text-[#DDCCAA]">Find any quote in millions of movie lines</h1>
-      <button
-        class="text-white text-xl h-12 bg-[#E31221] rounded-lg w-32 font-normal hover:bg-[#CC0E10] mt-12"
-      >
-        Get Started
-      </button>
-    </div>
+    <LandingScreen></LandingScreen>
     <div
       class="relative h-screen bg-cover bg-fixed bg-[url(/src/assets/landing1.png)]"
     >
@@ -59,4 +50,5 @@
 
 <script setup>
 import PageHeader from "@/components/layout/PageHeader.vue";
+import LandingScreen from "@/components/layout/LandingScreen.vue";
 </script>
