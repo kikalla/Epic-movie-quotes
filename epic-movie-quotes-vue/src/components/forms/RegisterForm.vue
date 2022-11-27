@@ -32,20 +32,20 @@
             />
             <img
               v-if="closeUsernameButton"
-              @click="clearInput('username')"
+              @mousedown="clearInput('username')"
               class="w-4 cursor-pointer absolute top-3 right-3 z-20"
               src="@/assets/clearIcon.svg"
               alt="clear"
             />
             <img
               v-if="meta.valid && !closeUsernameButton"
-              class="w-4 cursor-pointer absolute top-3 right-3"
+              class="w-4 absolute top-3 right-3"
               src="@/assets/validIcon.svg"
               alt="valid"
             />
             <img
               v-if="!meta.valid && !closeUsernameButton && errorMessage"
-              class="w-6 cursor-pointer absolute top-2 right-3 z-0"
+              class="w-6 absolute top-2 right-3 z-0"
               src="@/assets/errorIcon.svg"
               alt="error"
             />
@@ -84,20 +84,20 @@
             />
             <img
               v-if="closeEmailButton"
-              @click="clearInput('email')"
+              @mousedown="clearInput('email')"
               class="w-4 cursor-pointer absolute top-3 right-3 z-20"
               src="@/assets/clearIcon.svg"
               alt="clear"
             />
             <img
               v-if="meta.valid && !closeEmailButton"
-              class="w-4 cursor-pointer absolute top-3 right-3"
+              class="w-4 absolute top-3 right-3"
               src="@/assets/validIcon.svg"
               alt="valid"
             />
             <img
               v-if="!meta.valid && !closeEmailButton && errorMessage"
-              class="w-6 cursor-pointer absolute top-2 right-3 z-0"
+              class="w-6 absolute top-2 right-3 z-0"
               src="@/assets/errorIcon.svg"
               alt="error"
             />
@@ -226,7 +226,7 @@ function clearInput(variable) {
 function closeButtonHide(variable) {
   setTimeout(() => {
     eval(variable).value = false;
-  }, 0.01);
+  }, 0.0001);
 }
 
 function showHide(id) {
