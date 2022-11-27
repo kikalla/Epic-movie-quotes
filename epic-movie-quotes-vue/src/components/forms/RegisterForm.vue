@@ -224,9 +224,7 @@ function clearInput(variable) {
 }
 
 function closeButtonHide(variable) {
-  setTimeout(() => {
-    eval(variable).value = false;
-  }, 0.0001);
+  eval(variable).value = false;
 }
 
 function showHide(id) {
