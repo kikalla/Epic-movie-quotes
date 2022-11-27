@@ -1,5 +1,6 @@
 <template>
   <Form
+    ref="form"
     @submit="createUser()"
     class="bg-[#222030] w-[37.5rem] h-[43.75rem] px-28 rounded-xl flex flex-col justify-center items-center absolute top-40 left-[41.25rem]"
   >
@@ -216,6 +217,7 @@ const email = ref("");
 const password = ref("");
 const closeUsernameButton = ref(null);
 const closeEmailButton = ref(null);
+const form = ref(null);
 
 function clearInput(variable) {
   eval(variable).value = "";
@@ -238,8 +240,8 @@ function showHide(id) {
 
 function createUser() {
   const data = {
-    username: username.value,
-    email: email.value,
+    username: username.value.trim(),
+    email: email.value.trim().toLowerCase(),
     password: password.value,
   };
   axios
@@ -247,9 +249,16 @@ function createUser() {
     .then(function () {
       router.push({ path: "/" });
     })
-    .catch(function () {
-      console.log("error");
-      console.log(data);
+    .catch((error) => {
+      if (error.response.status == 422) {
+        let errorMessage = error.response.data.errors;
+        if (errorMessage.username) {
+          form.value.setFieldError("username", errorMessage.username[0]);
+        }
+        if (errorMessage.email) {
+          form.value.setFieldError("email", errorMessage.email[0]);
+        }
+      }
     });
 }
 </script>
