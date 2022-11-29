@@ -190,7 +190,7 @@
         >Get Started</RedButton
       >
       <a
-        href="http://127.0.0.1:8000/api/auth/redirect"
+        :href="BACK_URL"
         class="flex w-full text-base p-2 rounded-md mt-6 border-[#CED4DA] border text-white justify-center items-center"
       >
         <img class="mr-2" src="@/assets/googleIcon.svg" alt="" />Sign up with
@@ -213,6 +213,7 @@ import "@/config/vee-validate/rules.js";
 import "@/config/vee-validate/messages.js";
 import RedButton from "@/components/ui/RedButton.vue";
 
+const BACK_URL = import.meta.env.VITE_BACK_URL;
 const username = ref("");
 const email = ref("");
 const password = ref("");
