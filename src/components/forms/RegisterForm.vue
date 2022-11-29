@@ -189,12 +189,13 @@
       <RedButton type="submit" class="w-full text-base p-2 rounded-md mt-2"
         >Get Started</RedButton
       >
-      <button
+      <a
+        href="http://127.0.0.1:8000/api/auth/redirect"
         class="flex w-full text-base p-2 rounded-md mt-6 border-[#CED4DA] border text-white justify-center items-center"
       >
         <img class="mr-2" src="@/assets/googleIcon.svg" alt="" />Sign up with
         Google
-      </button>
+      </a>
     </div>
     <div class="flex mt-8">
       <p class="text-[#6C757D] mr-1">Already have an account?</p>
