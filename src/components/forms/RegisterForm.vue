@@ -190,7 +190,7 @@
         >Get Started</RedButton
       >
       <a
-        :href="BACK_URL"
+        :href="BACK_URL + '/auth/redirect'"
         class="flex w-full text-base p-2 rounded-md mt-6 border-[#CED4DA] border text-white justify-center items-center"
       >
         <img class="mr-2" src="@/assets/googleIcon.svg" alt="" />Sign up with
