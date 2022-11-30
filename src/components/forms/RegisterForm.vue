@@ -247,7 +247,7 @@ function createUser() {
   axios
     .post("http://127.0.0.1:8000/api/register", data)
     .then(function () {
-      router.push({ path: "/" });
+      router.push({ path: "/verification-send" });
     })
     .catch((error) => {
       if (error.response.status == 422) {

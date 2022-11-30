@@ -3,13 +3,13 @@
     <PageHeader></PageHeader>
     <LandingScreen></LandingScreen>
   </div>
-  <RegisterForm></RegisterForm>
+  <VerificationSend></VerificationSend>
 </template>
 
 <script setup>
 import LandingScreen from "@/components/layout/LandingScreen.vue";
 import PageHeader from "@/components/layout/PageHeader.vue";
-import RegisterForm from "@/components/forms/RegisterForm.vue";
+import VerificationSend from "@/components/layout/VerificationSend.vue";
 import router from "@/router";
 
 function close() {
