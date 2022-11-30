@@ -245,9 +245,9 @@ function createUser() {
     password: password.value,
   };
   axios
-    .post("http://127.0.0.1:8000/api/register", data)
+    .post(BACK_URL + "/register", data)
     .then(function () {
-      router.push({ path: "/" });
+      router.push({ path: "/verification-send" });
     })
     .catch((error) => {
       if (error.response.status == 422) {

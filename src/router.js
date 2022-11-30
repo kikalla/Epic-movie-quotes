@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "@/pages/HomePage.vue";
 import RegisterPage from "@/pages/RegisterPage.vue";
+import VerificationSendPage from "@/pages/VerificationSendPage.vue";
+import VerifiedPage from "@/pages/VerifiedPage.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,6 +16,16 @@ const router = createRouter({
       path: "/register",
       name: "register",
       component: RegisterPage,
+    },
+    {
+      path: "/verification-send",
+      name: "verification-send",
+      component: VerificationSendPage,
+    },
+    {
+      path: "/verified",
+      name: "verified",
+      component: VerifiedPage,
     },
   ],
 });
