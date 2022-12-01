@@ -3,13 +3,13 @@
     <PageHeader></PageHeader>
     <LandingScreen></LandingScreen>
   </div>
-  <EmailVerified></EmailVerified>
+  <LoginForm></LoginForm>
 </template>
 
 <script setup>
 import LandingScreen from "@/components/layout/LandingScreen.vue";
 import PageHeader from "@/components/layout/PageHeader.vue";
-import EmailVerified from "@/components/layout/EmailVerified.vue";
+import LoginForm from "@/components/forms/LoginForm.vue";
 import router from "@/router/index.js";
 
 function close() {

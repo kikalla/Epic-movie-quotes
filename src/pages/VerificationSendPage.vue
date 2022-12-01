@@ -10,7 +10,7 @@
 import LandingScreen from "@/components/layout/LandingScreen.vue";
 import PageHeader from "@/components/layout/PageHeader.vue";
 import VerificationSend from "@/components/layout/VerificationSend.vue";
-import router from "@/router";
+import router from "@/router/index.js";
 
 function close() {
   router.push({ path: "/" });

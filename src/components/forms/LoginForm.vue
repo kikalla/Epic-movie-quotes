@@ -1,64 +1,12 @@
 <template>
   <Form
     ref="form"
-    @submit="createUser()"
-    class="bg-[#222030] w-[37.5rem] h-[43.75rem] px-28 rounded-xl flex flex-col justify-center items-center absolute top-40 left-[41.25rem]"
+    @submit="loginUser()"
+    class="bg-[#222030] w-[37.5rem] h-[35rem] px-28 rounded-xl flex flex-col justify-center items-center absolute top-40 left-[41.25rem]"
   >
     <h2 class="text-white text-[2rem]">Create an account</h2>
     <p class="text-[#6C757D] text-base">Start your journey!</p>
     <div class="w-[22.5rem]">
-      <div class="flex flex-col">
-        <label for="username" class="mb-2 text-white text-base">Username</label>
-        <div class="rounded-md mb-7 flex relative">
-          <Field
-            v-slot="{ meta, field, errorMessage }"
-            v-model="username"
-            name="username"
-            rules="required|min:3|max:15|low_case|"
-          >
-            <input
-              id="username"
-              type="text"
-              class="bg-[#CED4DA] rounded-md h-10 p-3 outline-none w-full focus:outline-gray-500 focus:outline-4 outline-offset-0"
-              v-bind="field"
-              placeholder="At least 3 & max.15 lower case characters"
-              :class="{
-                'outline-4 outline-[#198754] outline-offset-0': meta.valid,
-                'outline-4 outline-[#E31221] outline-offset-0':
-                  meta.touched && !meta.valid,
-              }"
-              @focus="closeUsernameButton = true"
-              @blur="closeButtonHide('closeUsernameButton')"
-            />
-            <img
-              v-if="closeUsernameButton"
-              @mousedown="clearInput('username')"
-              class="w-4 cursor-pointer absolute top-3 right-3 z-20"
-              src="@/assets/clearIcon.svg"
-              alt="clear"
-            />
-            <img
-              v-if="meta.valid && !closeUsernameButton"
-              class="w-4 absolute top-3 right-3"
-              src="@/assets/validIcon.svg"
-              alt="valid"
-            />
-            <img
-              v-if="!meta.valid && !closeUsernameButton && errorMessage"
-              class="w-6 absolute top-2 right-3 z-0"
-              src="@/assets/errorIcon.svg"
-              alt="error"
-            />
-          </Field>
-        </div>
-        <div class="relative">
-          <ErrorMessage
-            name="username"
-            class="text-red-600 text-sm absolute bottom-1.5"
-          />
-        </div>
-      </div>
-
       <div class="flex flex-col">
         <label for="email" class="mb-2 text-white text-base">Email</label>
         <div class="rounded-md mb-7 flex relative">
@@ -147,59 +95,34 @@
           />
         </div>
       </div>
-
-      <div class="flex flex-col">
-        <label for="confirm" class="mb-2 text-white text-base"
-          >Confirm Password
-        </label>
-        <div class="bg-[#CED4DA] rounded-md mb-7 flex relative">
-          <Field
-            v-slot="{ meta, field }"
-            name="confirm"
-            placeholder="Confirm password"
-            rules="required|confirmed:@password"
-          >
-            <input
-              id="confirm"
-              type="password"
-              class="bg-[#CED4DA] rounded-md h-10 p-3 outline-none w-full focus:outline-gray-500 focus:outline-4 outline-offset-0"
-              v-bind="field"
-              placeholder="At least 8 & max.15 lower case characters"
-              :class="{
-                'outline-4 outline-[#198754] outline-offset-0': meta.valid,
-                'outline-4 outline-[#E31221] outline-offset-0':
-                  meta.touched && !meta.valid,
-              }"
-            />
-            <img
-              @click="showHide('confirm')"
-              class="w-6 cursor-pointer absolute top-2 right-3"
-              src="@/assets/eyeIcon.svg"
-              alt="eye"
-            />
-          </Field>
-        </div>
-        <div class="relative">
-          <ErrorMessage
-            name="confirm"
-            class="text-red-600 text-sm absolute bottom-1.5"
+      <div class="flex justify-between mb-2">
+        <div>
+          <input
+            v-model="remember"
+            class="w-4 h-4 align-middle"
+            name="remember"
+            id="remember"
+            type="checkbox"
           />
+          <label class="text-white ml-2" for="remember">Remember me</label>
         </div>
+        <a class="text-[#0D6EFD]" @click="resetRoute()">Forgot password</a>
       </div>
+
       <RedButton type="submit" class="w-full text-base p-2 rounded-md mt-2"
-        >Get Started</RedButton
+        >Sign In</RedButton
       >
       <a
-        :href="BACK_URL + '/auth/redirect/register'"
+        :href="BACK_URL + '/auth/redirect/login'"
         class="flex w-full text-base p-2 rounded-md mt-6 border-[#CED4DA] border text-white justify-center items-center"
       >
-        <img class="mr-2" src="@/assets/googleIcon.svg" alt="" />Sign up with
+        <img class="mr-2" src="@/assets/googleIcon.svg" alt="" />Sign in with
         Google
       </a>
     </div>
     <div class="flex mt-8">
       <p class="text-[#6C757D] mr-1">Already have an account?</p>
-      <a class="text-[#0D6EFD]" @click="loginRoute()">Log in</a>
+      <a class="text-[#0D6EFD]" @click="signUp()">Sign Up</a>
     </div>
   </Form>
 </template>
@@ -207,22 +130,26 @@
 <script setup>
 import { ref } from "vue";
 import router from "@/router/index.js";
-import axios from "axios";
+import axiosInstance from "@/config/axios.js";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import "@/config/vee-validate/rules.js";
 import "@/config/vee-validate/messages.js";
 import RedButton from "@/components/ui/RedButton.vue";
+import { useAuthStore } from "@/store.js";
 
 const BACK_URL = import.meta.env.VITE_BACK_URL;
-const username = ref("");
 const email = ref("");
 const password = ref("");
-const closeUsernameButton = ref(null);
+const remember = ref(false);
 const closeEmailButton = ref(null);
 const form = ref(null);
 
-function loginRoute() {
-  router.push({ path: "/login" });
+function resetRoute() {
+  router.push({ path: "/reset-password" });
+}
+
+function signUp() {
+  router.push({ path: "/register" });
 }
 
 function clearInput(variable) {
@@ -242,25 +169,26 @@ function showHide(id) {
   }
 }
 
-function createUser() {
+function loginUser() {
   const data = {
-    username: username.value.trim(),
     email: email.value.trim().toLowerCase(),
     password: password.value,
+    remember: remember.value,
   };
-  axios
-    .post(BACK_URL + "/register", data)
+  axiosInstance
+    .post(BACK_URL + "/login", data)
     .then(function () {
-      router.push({ path: "/verification-send" });
+      useAuthStore().authenticated = true;
+      router.push({ path: "/news-feed" });
     })
     .catch((error) => {
       if (error.response.status == 422) {
-        let errorMessage = error.response.data.errors;
-        if (errorMessage.username) {
-          form.value.setFieldError("username", errorMessage.username[0]);
+        if (error.response.data == "Wrong password") {
+          return form.value.setFieldError("password", error.response.data);
         }
-        if (errorMessage.email) {
-          form.value.setFieldError("email", errorMessage.email[0]);
+        if (error.response.data.errors.email) {
+          form.value.setFieldError("email", "This email is not registered");
+          return form.value.setFieldError("password", "Wrong password");
         }
       }
     });

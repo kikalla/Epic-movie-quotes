@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import router from "@/router";
+import router from "@/router/index.js";
 import RedButton from "@/components/ui/RedButton.vue";
 
 function registerRoute() {
