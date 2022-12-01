@@ -12,6 +12,7 @@
         >Sign Up
       </RedButton>
       <button
+        @click="loginRoute()"
         class="text-white text-base border-white border h-9 rounded-lg w-28 font-normal"
       >
         Log In
@@ -21,10 +22,14 @@
 </template>
 
 <script setup>
-import router from "@/router";
+import router from "@/router/index.js";
 import RedButton from "@/components/ui/RedButton.vue";
 
 function registerRoute() {
   router.push({ path: "/register" });
+}
+
+function loginRoute() {
+  router.push({ path: "/login" });
 }
 </script>
