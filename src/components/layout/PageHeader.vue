@@ -12,10 +12,19 @@
         >Sign Up
       </RedButton>
       <button
+        v-if="!authStore.authenticated"
         @click="loginRoute()"
         class="text-white text-base border-white border h-9 rounded-lg w-28 font-normal"
       >
         Log In
+      </button>
+
+      <button
+        v-else
+        @click="logout()"
+        class="text-white text-base border-white border h-9 rounded-lg w-28 font-normal"
+      >
+        Log Out
       </button>
     </div>
   </div>
@@ -24,6 +33,11 @@
 <script setup>
 import router from "@/router/index.js";
 import RedButton from "@/components/ui/RedButton.vue";
+import { useAuthStore } from "@/store.js";
+import axios from "axios";
+
+const BACK_URL = import.meta.env.VITE_BACK_URL;
+const authStore = useAuthStore();
 
 function registerRoute() {
   router.push({ path: "/register" });
@@ -31,5 +45,12 @@ function registerRoute() {
 
 function loginRoute() {
   router.push({ path: "/login" });
+}
+
+function logout() {
+  axios.get(BACK_URL + "/logout").then(() => {
+    authStore.authenticated = false;
+    router.push({ path: "/login" });
+  });
 }
 </script>

@@ -95,12 +95,25 @@
           />
         </div>
       </div>
+      <div class="flex justify-between mb-2">
+        <div>
+          <input
+            v-model="remember"
+            class="w-4 h-4 align-middle"
+            name="remember"
+            id="remember"
+            type="checkbox"
+          />
+          <label class="text-white ml-2" for="remember">Remember me</label>
+        </div>
+        <a class="text-[#0D6EFD]" @click="resetRoute()">Forgot password</a>
+      </div>
 
       <RedButton type="submit" class="w-full text-base p-2 rounded-md mt-2"
         >Sign In</RedButton
       >
       <a
-        :href="BACK_URL + '/'"
+        :href="BACK_URL + '/auth/redirect/login'"
         class="flex w-full text-base p-2 rounded-md mt-6 border-[#CED4DA] border text-white justify-center items-center"
       >
         <img class="mr-2" src="@/assets/googleIcon.svg" alt="" />Sign in with
@@ -109,7 +122,7 @@
     </div>
     <div class="flex mt-8">
       <p class="text-[#6C757D] mr-1">Already have an account?</p>
-      <a class="text-[#0D6EFD]" href="">Sign Up</a>
+      <a class="text-[#0D6EFD]" @click="signUp()">Sign Up</a>
     </div>
   </Form>
 </template>
@@ -127,8 +140,17 @@ import { useAuthStore } from "@/store.js";
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 const email = ref("");
 const password = ref("");
+const remember = ref(false);
 const closeEmailButton = ref(null);
 const form = ref(null);
+
+function resetRoute() {
+  router.push({ path: "/reset-password" });
+}
+
+function signUp() {
+  router.push({ path: "/register" });
+}
 
 function clearInput(variable) {
   eval(variable).value = "";
@@ -151,11 +173,12 @@ function loginUser() {
   const data = {
     email: email.value.trim().toLowerCase(),
     password: password.value,
+    remember: remember.value,
   };
   axiosInstance
     .post(BACK_URL + "/login", data)
     .then(function () {
-      useAuthStore.authenticated = true;
+      useAuthStore().authenticated = true;
       router.push({ path: "/news-feed" });
     })
     .catch((error) => {

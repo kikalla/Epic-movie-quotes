@@ -5,9 +5,11 @@ import VerificationSendPage from "@/pages/VerificationSendPage.vue";
 import VerifiedPage from "@/pages/VerifiedPage.vue";
 import LoginPage from "@/pages/LoginPage.vue";
 import NewsPage from "@/pages/NewsPage.vue";
+import ResetPasswordPage from "@/pages/ResetPasswordPage.vue";
+import Error401Page from "@/pages/Error401Page.vue";
 import { useAuthStore } from "@/store.js";
 import axios from "axios";
-import isAuthenticated from "@/router/guards.js";
+import guards from "@/router/guards.js";
 
 axios.defaults.withCredentials = true;
 
@@ -18,11 +20,13 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomePage,
+      beforeEnter: guards.notAuthenticated,
     },
     {
       path: "/register",
       name: "register",
       component: RegisterPage,
+      beforeEnter: guards.notAuthenticated,
     },
     {
       path: "/verification-send",
@@ -38,12 +42,23 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: LoginPage,
+      beforeEnter: guards.notAuthenticated,
     },
     {
       path: "/news-feed",
       name: "news-feed",
       component: NewsPage,
-      beforeEnter: isAuthenticated,
+      beforeEnter: guards.isAuthenticated,
+    },
+    {
+      path: "/error-401",
+      name: "error-401",
+      component: Error401Page,
+    },
+    {
+      path: "/reset-password",
+      name: "reset-password",
+      component: ResetPasswordPage,
     },
   ],
 });
