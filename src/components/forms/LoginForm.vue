@@ -145,7 +145,7 @@ const closeEmailButton = ref(null);
 const form = ref(null);
 
 function resetRoute() {
-  router.push({ path: "/reset-password" });
+  router.push({ path: "/forgot/password" });
 }
 
 function signUp() {

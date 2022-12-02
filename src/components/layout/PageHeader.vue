@@ -50,7 +50,7 @@ function loginRoute() {
 function logout() {
   axios.get(BACK_URL + "/logout").then(() => {
     authStore.authenticated = false;
-    router.push({ path: "/login" });
+    router.push({ path: "/" });
   });
 }
 </script>

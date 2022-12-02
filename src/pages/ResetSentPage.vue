@@ -3,13 +3,13 @@
     <PageHeader></PageHeader>
     <LandingScreen></LandingScreen>
   </div>
-  <ResetPasswordForm></ResetPasswordForm>
+  <ResetSent></ResetSent>
 </template>
 
 <script setup>
 import LandingScreen from "@/components/layout/LandingScreen.vue";
 import PageHeader from "@/components/layout/PageHeader.vue";
-import ResetPasswordForm from "@/components/forms/ResetPasswordForm.vue";
+import ResetSent from "@/components/layout/ResetSent.vue";
 import router from "@/router/index.js";
 
 function close() {
