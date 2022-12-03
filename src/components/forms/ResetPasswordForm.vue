@@ -101,8 +101,6 @@ import { ref } from "vue";
 import router from "@/router/index.js";
 import axiosInstance from "@/config/axios.js";
 import { Form, Field, ErrorMessage } from "vee-validate";
-import "@/config/vee-validate/rules.js";
-import "@/config/vee-validate/messages.js";
 import RedButton from "@/components/ui/RedButton.vue";
 import { useRouter } from "vue-router";
 
