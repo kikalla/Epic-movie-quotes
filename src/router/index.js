@@ -9,6 +9,8 @@ import ResetPasswordPage from "@/pages/ResetPasswordPage.vue";
 import ForgotPasswordPage from "@/pages/ForgotPasswordPage.vue";
 import ResetSentPage from "@/pages/ResetSentPage.vue";
 import ResetSuccessPage from "@/pages/ResetSuccessPage.vue";
+import MoviesPage from "@/pages/MoviesPage.vue";
+import AddMoviePage from "@/pages/AddMoviePage.vue";
 import Error401Page from "@/pages/Error401Page.vue";
 import { useAuthStore } from "@/store.js";
 import axios from "axios";
@@ -77,6 +79,16 @@ const router = createRouter({
       path: "/reset-success",
       name: "reset-success",
       component: ResetSuccessPage,
+    },
+    {
+      path: "/movies",
+      name: "movies",
+      component: MoviesPage,
+    },
+    {
+      path: "/movies/add-movie",
+      name: "add-movie",
+      component: AddMoviePage,
     },
   ],
 });

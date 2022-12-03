@@ -1,14 +1,27 @@
 <template>
   <div
-    class="bg-black w-full h-24 flex px-[4.5rem] items-center justify-between fixed top-0 z-50"
+    class="bg-[#181624] w-full h-24 flex px-[4.5rem] items-center justify-between fixed top-0 z-50"
   >
-    <h2 class="text-white text-base font-medium">MOVIE QUOTES</h2>
-    <div>
-      <select name="lang" id="lang" class="h-7 text-white bg-black">
+    <h2 class="text-[#DDCCAA] text-base font-medium">MOVIE QUOTES</h2>
+    <div class="flex items-center">
+      <img
+        v-if="authStore.authenticated"
+        class="w-6"
+        src="@/assets/bell.svg"
+        alt="bell"
+      />
+      <select
+        name="lang"
+        id="lang"
+        class="h-7 text-white bg-[#181624] mx-6 outline-none"
+      >
         <option value="en">Eng</option>
         <option value="ka">Geo</option>
       </select>
-      <RedButton class="h-9 w-28 mx-6 rounded-lg" @click="registerRoute()"
+      <RedButton
+        v-if="!authStore.authenticated"
+        class="h-9 w-28 mr-6 rounded-lg"
+        @click="registerRoute()"
         >Sign Up
       </RedButton>
       <button
