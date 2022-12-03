@@ -132,8 +132,6 @@ import { ref } from "vue";
 import router from "@/router/index.js";
 import axiosInstance from "@/config/axios.js";
 import { Form, Field, ErrorMessage } from "vee-validate";
-import "@/config/vee-validate/rules.js";
-import "@/config/vee-validate/messages.js";
 import RedButton from "@/components/ui/RedButton.vue";
 import { useAuthStore } from "@/store.js";
 
@@ -145,7 +143,7 @@ const closeEmailButton = ref(null);
 const form = ref(null);
 
 function resetRoute() {
-  router.push({ path: "/reset-password" });
+  router.push({ path: "/forgot/password" });
 }
 
 function signUp() {

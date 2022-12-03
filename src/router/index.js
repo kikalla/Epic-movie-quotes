@@ -6,6 +6,9 @@ import VerifiedPage from "@/pages/VerifiedPage.vue";
 import LoginPage from "@/pages/LoginPage.vue";
 import NewsPage from "@/pages/NewsPage.vue";
 import ResetPasswordPage from "@/pages/ResetPasswordPage.vue";
+import ForgotPasswordPage from "@/pages/ForgotPasswordPage.vue";
+import ResetSentPage from "@/pages/ResetSentPage.vue";
+import ResetSuccessPage from "@/pages/ResetSuccessPage.vue";
 import Error401Page from "@/pages/Error401Page.vue";
 import { useAuthStore } from "@/store.js";
 import axios from "axios";
@@ -56,9 +59,24 @@ const router = createRouter({
       component: Error401Page,
     },
     {
-      path: "/reset-password",
+      path: "/reset/password",
       name: "reset-password",
       component: ResetPasswordPage,
+    },
+    {
+      path: "/forgot/password",
+      name: "forgot-password",
+      component: ForgotPasswordPage,
+    },
+    {
+      path: "/reset-sent",
+      name: "reset-sent",
+      component: ResetSentPage,
+    },
+    {
+      path: "/reset-success",
+      name: "reset-success",
+      component: ResetSuccessPage,
     },
   ],
 });
