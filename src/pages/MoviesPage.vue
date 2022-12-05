@@ -46,13 +46,13 @@
         <div
           class="grid grid-cols-3 grid-rows-[repeat(auto-fit_,50%)] gap-14 h-[75vh] overflow-scroll"
         >
-          <div>
+          <div v-for="movie in movies" :key="movie.image">
             <img
               class="rounded-xl h-4/5 object-cover"
-              src="@/assets/moviePhoto.png"
+              :src="BACK_URL_IMAGE + '/storage/' + movie.image"
               alt="movie"
             />
-            <h2 class="text-2xl mt-4">Loki Mobius (2021)</h2>
+            <h2 class="text-2xl mt-4">{{ JSON.parse(movie.title).en }}</h2>
             <div class="flex items-center mt-4">
               <p class="mr-3">10</p>
               <img src="@/assets/quote.svg" alt="quote" />
@@ -68,8 +68,24 @@
 import PageHeader from "@/components/layout/PageHeader.vue";
 import RedButton from "@/components/ui/RedButton.vue";
 import router from "@/router/index.js";
+import axios from "axios";
+import { ref, onBeforeMount } from "vue";
+import { useAuthStore } from "@/store.js";
+
+const BACK_URL = import.meta.env.VITE_BACK_URL;
+const BACK_URL_IMAGE = BACK_URL.replace("/api", "");
+
+const movies = ref(null);
 
 function addMovieRoute() {
   router.push({ path: "/movies/add-movie" });
 }
+
+onBeforeMount(() => {
+  axios
+    .post(BACK_URL + "/get-movies", { user_id: useAuthStore().userId })
+    .then((response) => {
+      movies.value = response.data;
+    });
+});
 </script>

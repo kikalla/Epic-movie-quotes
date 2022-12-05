@@ -17,15 +17,16 @@
       <img src="@/assets/default.png" alt="profile" />
       <p class="text-xl ml-4">Nino Tabagari</p>
     </div>
-    <form @submit.prevent="addMovie()" action="">
+    <form @submit.prevent="addMovie">
       <div
         class="border-[#6C757D] border rounded-lg flex justify-between items-center my-5"
       >
         <input
+          v-model="titleEn"
           required
           class="bg-[#11101A] h-12 outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg"
           type="text"
-          name="name-en"
+          name="title-en"
           placeholder="Movie Name"
         />
         <p class="mr-4 text-[#6C757D]">Eng</p>
@@ -35,10 +36,11 @@
         class="border-[#6C757D] border rounded-lg flex justify-between items-center mb-5"
       >
         <input
+          v-model="titleKa"
           required
           class="bg-[#11101A] h-12 outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg"
           type="text"
-          name="name-ka"
+          name="title-ka"
           placeholder="ფილმის სახელი"
         />
         <p class="mr-4 text-[#6C757D]">ქარ</p>
@@ -48,6 +50,7 @@
         class="border-[#6C757D] border rounded-lg flex justify-between items-center mb-5"
       >
         <input
+          v-model="directorEn"
           required
           class="bg-[#11101A] h-12 outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg"
           type="text"
@@ -61,6 +64,7 @@
         class="border-[#6C757D] border rounded-lg flex justify-between items-center mb-5"
       >
         <input
+          v-model="directorKa"
           required
           class="bg-[#11101A] h-12 outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg"
           type="text"
@@ -74,6 +78,7 @@
         class="border-[#6C757D] border rounded-lg flex justify-between items-start pt-2 mb-5"
       >
         <textarea
+          v-model="descriptionEn"
           required
           name="description-en"
           class="bg-[#11101A] h-[5.5rem] outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg resize-none"
@@ -86,6 +91,7 @@
         class="border-[#6C757D] border rounded-lg flex justify-between items-start pt-2 mb-5"
       >
         <textarea
+          v-model="descriptionKa"
           required
           name="description-ka"
           class="bg-[#11101A] h-[5.5rem] outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg resize-none"
@@ -104,7 +110,9 @@
           for="image"
           >Choose file
         </label>
+
         <input
+          @change="handleChange"
           required
           class="w-[1px] h-[1px] relative right-1 z-0"
           id="image"
@@ -120,11 +128,46 @@
 <script setup>
 import RedButton from "@/components/ui/RedButton.vue";
 import router from "@/router/index.js";
+import axios from "axios";
+import { useAuthStore } from "@/store.js";
+import { ref } from "vue";
 
-function addMovie() {
-  console.log("a");
-}
+const titleEn = ref("");
+const titleKa = ref("");
+const directorEn = ref("");
+const directorKa = ref("");
+const descriptionEn = ref("");
+const descriptionKa = ref("");
+const image = ref(null);
+const BACK_URL = import.meta.env.VITE_BACK_URL;
+
 function close() {
   router.push({ path: "/movies" });
+}
+
+function handleChange(e) {
+  const file = e.target.files[0];
+  image.value = file;
+}
+
+function addMovie() {
+  const formData = new FormData();
+  formData.append("user_id", useAuthStore().userId);
+  formData.append("title_en", titleEn.value);
+  formData.append("title_ka", titleKa.value);
+  formData.append("director_en", directorEn.value);
+  formData.append("director_ka", directorKa.value);
+  formData.append("description_en", descriptionEn.value);
+  formData.append("description_ka", descriptionKa.value);
+  formData.append("image", image.value);
+
+  axios
+    .post(BACK_URL + "/movies/add-movie", formData)
+    .then(() => {
+      router.push({ path: "/movies" });
+    })
+    .catch((error) => {
+      console.log(error.response);
+    });
 }
 </script>

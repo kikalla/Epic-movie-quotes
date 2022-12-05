@@ -84,11 +84,13 @@ const router = createRouter({
       path: "/movies",
       name: "movies",
       component: MoviesPage,
+      beforeEnter: guards.isAuthenticated,
     },
     {
       path: "/movies/add-movie",
       name: "add-movie",
       component: AddMoviePage,
+      beforeEnter: guards.isAuthenticated,
     },
   ],
 });
@@ -99,8 +101,15 @@ router.beforeEach(async (to, from, next) => {
 
   if (authStore.authenticated === null) {
     try {
-      await axios.get(BACK_URL + "/check-jwt");
-      authStore.authenticated = true;
+      await axios.get(BACK_URL + "/check-jwt").then((response) => {
+        authStore.authenticated = true;
+        authStore.userId = response.data.user.id;
+        if (response.data.user.email_verified_at !== null) {
+          authStore.verified = true;
+        } else {
+          authStore.verified = false;
+        }
+      });
     } catch (error) {
       authStore.authenticated = false;
     } finally {
