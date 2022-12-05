@@ -8,9 +8,9 @@
           <img src="@/assets/home.svg" alt="home" />
           <a href="" class="text-2xl ml-11">News feed</a>
         </div>
-        <div class="flex items-center ml-3">
+        <div @click="moviesRoute" class="flex items-center ml-3 cursor-pointer">
           <img src="@/assets/activeMovie.svg" alt="home" />
-          <a href="" class="text-2xl ml-11">List of movies</a>
+          <a class="text-2xl ml-11">List of movies</a>
         </div>
       </div>
 
@@ -31,9 +31,13 @@
                 <div
                   class="flex justify-between items-center w-36 h-10 px-7 py-2 rounded-lg bg-[#24222F]"
                 >
-                  <a href=""><img src="@/assets/edit.svg" alt="edit" /></a>
+                  <a @click="editMovie"
+                    ><img src="@/assets/edit.svg" alt="edit"
+                  /></a>
                   <div class="h-3/4 border-[#6C757D] border"></div>
-                  <a href=""><img src="@/assets/delete.svg" alt="delete" /></a>
+                  <a @click="deleteMovie"
+                    ><img src="@/assets/delete.svg" alt="delete"
+                  /></a>
                 </div>
               </div>
               <div class="my-5">
@@ -66,15 +70,29 @@ import axios from "axios";
 import { ref, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 
-// import { useAuthStore } from "@/store.js";
 const movie = ref(null);
 const movieId = useRouter().currentRoute.value.params.movieId;
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 const BACK_URL_IMAGE = BACK_URL.replace("/api", "");
 
-// function addMovieRoute() {
-//   router.push({ path: "/movies/add-movie" });
-// }
+function editMovie() {
+  router.push({ path: "/movies/" + movieId + "/edit" });
+}
+
+function moviesRoute() {
+  router.push({ path: "/movies" });
+}
+
+function deleteMovie() {
+  axios
+    .post(BACK_URL + "/delete-movie", { movie_id: movieId })
+    .then(() => {
+      router.push({ path: "/movies" });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 
 onBeforeMount(() => {
   axios

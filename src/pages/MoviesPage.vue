@@ -8,9 +8,9 @@
           <img src="@/assets/home.svg" alt="home" />
           <a href="" class="text-2xl ml-11">News feed</a>
         </div>
-        <div class="flex items-center ml-3">
+        <div @click="moviesRoute" class="flex items-center ml-3 cursor-pointer">
           <img src="@/assets/activeMovie.svg" alt="home" />
-          <a href="" class="text-2xl ml-11">List of movies</a>
+          <a class="text-2xl ml-11">List of movies</a>
         </div>
       </div>
 
@@ -43,7 +43,7 @@
           class="grid grid-cols-3 grid-rows-[repeat(auto-fit_,50%)] gap-14 h-[75vh] overflow-scroll"
         >
           <div v-for="movie in movies" :key="movie.image">
-            <a :href="'/movies/' + movie.id">
+            <a @click="movieRoute(movie.id)" class="cursor-pointer">
               <img
                 class="rounded-xl h-4/5 object-cover"
                 :src="BACK_URL_IMAGE + '/storage/' + movie.image"
@@ -73,8 +73,15 @@ import { useAuthStore } from "@/store.js";
 
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 const BACK_URL_IMAGE = BACK_URL.replace("/api", "");
-
 const movies = ref({});
+
+function moviesRoute() {
+  router.push({ path: "/movies" });
+}
+
+function movieRoute(movieId) {
+  router.push({ path: "/movies/" + movieId });
+}
 
 function addMovieRoute() {
   router.push({ path: "/movies/add-movie" });

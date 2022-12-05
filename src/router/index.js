@@ -11,6 +11,7 @@ import ResetSentPage from "@/pages/ResetSentPage.vue";
 import ResetSuccessPage from "@/pages/ResetSuccessPage.vue";
 import MoviesPage from "@/pages/MoviesPage.vue";
 import MoviePage from "@/pages/MoviePage.vue";
+import MovieEditPage from "@/pages/MovieEditPage.vue";
 import AddMoviePage from "@/pages/AddMoviePage.vue";
 import Error401Page from "@/pages/Error401Page.vue";
 import { useAuthStore } from "@/store.js";
@@ -92,6 +93,12 @@ const router = createRouter({
       name: "movie",
       component: MoviePage,
     },
+    {
+      path: "/movies/:movieId/edit",
+      name: "movie-edit",
+      component: MovieEditPage,
+    },
+
     {
       path: "/movies/add-movie",
       name: "add-movie",
