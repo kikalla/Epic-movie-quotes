@@ -10,6 +10,7 @@ import ForgotPasswordPage from "@/pages/ForgotPasswordPage.vue";
 import ResetSentPage from "@/pages/ResetSentPage.vue";
 import ResetSuccessPage from "@/pages/ResetSuccessPage.vue";
 import MoviesPage from "@/pages/MoviesPage.vue";
+import MoviePage from "@/pages/MoviePage.vue";
 import AddMoviePage from "@/pages/AddMoviePage.vue";
 import Error401Page from "@/pages/Error401Page.vue";
 import { useAuthStore } from "@/store.js";
@@ -85,6 +86,11 @@ const router = createRouter({
       name: "movies",
       component: MoviesPage,
       beforeEnter: guards.isAuthenticated,
+    },
+    {
+      path: "/movies/:movieId",
+      name: "movie",
+      component: MoviePage,
     },
     {
       path: "/movies/add-movie",

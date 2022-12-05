@@ -3,13 +3,7 @@
   <div class="w-full h-screen pt-24 bg-[#0D0B14]">
     <div class="flex">
       <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
-        <div class="flex items-center">
-          <img class="w-[3.75rem]" src="@/assets/default.png" alt="profile" />
-          <div class="ml-6">
-            <h2 class="text-2xl">Nino Tabagari</h2>
-            <a href="" class="text-[#CED4DA]">Edit your profile</a>
-          </div>
-        </div>
+        <UserInfo></UserInfo>
         <div class="flex items-center my-11 ml-3">
           <img src="@/assets/home.svg" alt="home" />
           <a href="" class="text-2xl ml-11">News feed</a>
@@ -22,7 +16,9 @@
 
       <div class="w-4/5 pt-8 px-20 bg-[#0D0B14] text-white">
         <div class="flex justify-between items-center mb-16">
-          <h2 class="text-2xl font-medium">My list of movies (Total 25)</h2>
+          <h2 class="text-2xl font-medium">
+            My list of movies (Total {{ movies.length }})
+          </h2>
           <div class="flex">
             <div class="flex items-center w-36">
               <img class="mr-2 h-6" src="@/assets/search.png" alt="search" />
@@ -47,16 +43,18 @@
           class="grid grid-cols-3 grid-rows-[repeat(auto-fit_,50%)] gap-14 h-[75vh] overflow-scroll"
         >
           <div v-for="movie in movies" :key="movie.image">
-            <img
-              class="rounded-xl h-4/5 object-cover"
-              :src="BACK_URL_IMAGE + '/storage/' + movie.image"
-              alt="movie"
-            />
-            <h2 class="text-2xl mt-4">{{ JSON.parse(movie.title).en }}</h2>
-            <div class="flex items-center mt-4">
-              <p class="mr-3">10</p>
-              <img src="@/assets/quote.svg" alt="quote" />
-            </div>
+            <a :href="'/movies/' + movie.id">
+              <img
+                class="rounded-xl h-4/5 object-cover"
+                :src="BACK_URL_IMAGE + '/storage/' + movie.image"
+                alt="movie"
+              />
+              <h2 class="text-2xl mt-4">{{ JSON.parse(movie.title).en }}</h2>
+              <div class="flex items-center mt-4">
+                <p class="mr-3">10</p>
+                <img src="@/assets/quote.svg" alt="quote" />
+              </div>
+            </a>
           </div>
         </div>
       </div>
@@ -66,6 +64,7 @@
 
 <script setup>
 import PageHeader from "@/components/layout/PageHeader.vue";
+import UserInfo from "@/components/layout/UserInfo.vue";
 import RedButton from "@/components/ui/RedButton.vue";
 import router from "@/router/index.js";
 import axios from "axios";
@@ -75,7 +74,7 @@ import { useAuthStore } from "@/store.js";
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 const BACK_URL_IMAGE = BACK_URL.replace("/api", "");
 
-const movies = ref(null);
+const movies = ref({});
 
 function addMovieRoute() {
   router.push({ path: "/movies/add-movie" });
