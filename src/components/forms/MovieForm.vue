@@ -4,7 +4,7 @@
   >
     <img
       @click="close()"
-      class="absolute right-8 top-9"
+      class="absolute right-8 top-9 cursor-pointer"
       src="@/assets/close.svg"
       alt="close"
     />

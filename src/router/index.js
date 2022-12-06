@@ -13,6 +13,7 @@ import MoviesPage from "@/pages/MoviesPage.vue";
 import MoviePage from "@/pages/MoviePage.vue";
 import MovieEditPage from "@/pages/MovieEditPage.vue";
 import AddMoviePage from "@/pages/AddMoviePage.vue";
+import AddQuotePage from "@/pages/AddQuotePage.vue";
 import Error401Page from "@/pages/Error401Page.vue";
 import { useAuthStore } from "@/store.js";
 import axios from "axios";
@@ -86,7 +87,7 @@ const router = createRouter({
       path: "/movies",
       name: "movies",
       component: MoviesPage,
-      beforeEnter: guards.isAuthenticated,
+      // beforeEnter: guards.isAuthenticated,
     },
     {
       path: "/movies/:movieId",
@@ -98,12 +99,16 @@ const router = createRouter({
       name: "movie-edit",
       component: MovieEditPage,
     },
-
     {
       path: "/movies/add-movie",
       name: "add-movie",
       component: AddMoviePage,
-      beforeEnter: guards.isAuthenticated,
+      // beforeEnter: guards.isAuthenticated,
+    },
+    {
+      path: "/movies/:movieId/add-quote",
+      name: "add-quote",
+      component: AddQuotePage,
     },
   ],
 });

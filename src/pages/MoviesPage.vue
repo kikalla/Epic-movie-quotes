@@ -51,7 +51,7 @@
               />
               <h2 class="text-2xl mt-4">{{ movie.title.en }}</h2>
               <div class="flex items-center mt-4">
-                <p class="mr-3">10</p>
+                <p class="mr-3">{{ movie.quote_number }}</p>
                 <img src="@/assets/quote.svg" alt="quote" />
               </div>
             </a>
