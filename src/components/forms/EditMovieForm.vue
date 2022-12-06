@@ -176,12 +176,12 @@ onBeforeMount(() => {
     .post(BACK_URL + "/get-movie", { movie_id: movieId })
     .then((response) => {
       const movie = response.data;
-      titleEn.value = JSON.parse(movie.title).en;
-      titleKa.value = JSON.parse(movie.title).ka;
-      directorEn.value = JSON.parse(movie.director).en;
-      directorKa.value = JSON.parse(movie.director).ka;
-      descriptionEn.value = JSON.parse(movie.description).en;
-      descriptionKa.value = JSON.parse(movie.description).ka;
+      titleEn.value = movie.title.en;
+      titleKa.value = movie.title.ka;
+      directorEn.value = movie.director.en;
+      directorKa.value = movie.director.ka;
+      descriptionEn.value = movie.description.en;
+      descriptionKa.value = movie.description.ka;
     })
     .catch(() => {
       router.push({ path: "/error-404" });

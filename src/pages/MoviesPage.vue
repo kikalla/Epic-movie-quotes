@@ -45,11 +45,11 @@
           <div v-for="movie in movies" :key="movie.image">
             <a @click="movieRoute(movie.id)" class="cursor-pointer">
               <img
-                class="rounded-xl h-4/5 object-cover"
+                class="rounded-xl h-80 w-full object-cover"
                 :src="BACK_URL_IMAGE + '/storage/' + movie.image"
                 alt="movie"
               />
-              <h2 class="text-2xl mt-4">{{ JSON.parse(movie.title).en }}</h2>
+              <h2 class="text-2xl mt-4">{{ movie.title.en }}</h2>
               <div class="flex items-center mt-4">
                 <p class="mr-3">10</p>
                 <img src="@/assets/quote.svg" alt="quote" />
