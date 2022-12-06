@@ -19,14 +19,14 @@
           <h2 class="text-2xl font-medium mb-8">Movie discription</h2>
           <div v-if="movie" class="flex">
             <img
-              class="w-1/2 rounded-xl object-cover"
+              class="w-1/2 h-96 rounded-xl object-cover"
               :src="BACK_URL_IMAGE + '/storage/' + movie.image"
               alt=""
             />
             <div class="ml-5 w-1/2">
               <div class="flex justify-between">
                 <h2 class="text-2xl font-medium text-[#DDCCAA]">
-                  {{ JSON.parse(movie.title).en }}
+                  {{ movie.title.en }}
                 </h2>
                 <div
                   class="flex justify-between items-center w-36 h-10 px-7 py-2 rounded-lg bg-[#24222F]"
@@ -42,10 +42,10 @@
               </div>
               <div class="my-5">
                 Director:
-                <span class="ml-2">{{ JSON.parse(movie.director).en }}</span>
+                <span class="ml-2">{{ movie.director.en }}</span>
               </div>
               <p class="text-[#CED4DA] text-lg">
-                {{ JSON.parse(movie.description).en }}
+                {{ movie.description.en }}
               </p>
             </div>
           </div>
