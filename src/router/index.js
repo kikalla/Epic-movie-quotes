@@ -9,6 +9,10 @@ import ResetPasswordPage from "@/pages/ResetPasswordPage.vue";
 import ForgotPasswordPage from "@/pages/ForgotPasswordPage.vue";
 import ResetSentPage from "@/pages/ResetSentPage.vue";
 import ResetSuccessPage from "@/pages/ResetSuccessPage.vue";
+import MoviesPage from "@/pages/MoviesPage.vue";
+import MoviePage from "@/pages/MoviePage.vue";
+import MovieEditPage from "@/pages/MovieEditPage.vue";
+import AddMoviePage from "@/pages/AddMoviePage.vue";
 import Error401Page from "@/pages/Error401Page.vue";
 import { useAuthStore } from "@/store.js";
 import axios from "axios";
@@ -78,6 +82,29 @@ const router = createRouter({
       name: "reset-success",
       component: ResetSuccessPage,
     },
+    {
+      path: "/movies",
+      name: "movies",
+      component: MoviesPage,
+      beforeEnter: guards.isAuthenticated,
+    },
+    {
+      path: "/movies/:movieId",
+      name: "movie",
+      component: MoviePage,
+    },
+    {
+      path: "/movies/:movieId/edit",
+      name: "movie-edit",
+      component: MovieEditPage,
+    },
+
+    {
+      path: "/movies/add-movie",
+      name: "add-movie",
+      component: AddMoviePage,
+      beforeEnter: guards.isAuthenticated,
+    },
   ],
 });
 
@@ -87,8 +114,15 @@ router.beforeEach(async (to, from, next) => {
 
   if (authStore.authenticated === null) {
     try {
-      await axios.get(BACK_URL + "/check-jwt");
-      authStore.authenticated = true;
+      await axios.get(BACK_URL + "/check-jwt").then((response) => {
+        authStore.authenticated = true;
+        authStore.userId = response.data.user.id;
+        if (response.data.user.email_verified_at !== null) {
+          authStore.verified = true;
+        } else {
+          authStore.verified = false;
+        }
+      });
     } catch (error) {
       authStore.authenticated = false;
     } finally {

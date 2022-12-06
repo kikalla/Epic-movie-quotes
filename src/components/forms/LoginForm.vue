@@ -134,6 +134,7 @@ import axiosInstance from "@/config/axios.js";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import RedButton from "@/components/ui/RedButton.vue";
 import { useAuthStore } from "@/store.js";
+import axios from "axios";
 
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 const email = ref("");
@@ -177,6 +178,15 @@ function loginUser() {
     .post(BACK_URL + "/login", data)
     .then(function () {
       useAuthStore().authenticated = true;
+      axios.get(BACK_URL + "/check-jwt").then((response) => {
+        useAuthStore().userId = response.data.user.id;
+        if (response.data.user.email_verified_at !== null) {
+          useAuthStore().verified = true;
+        } else {
+          useAuthStore().verified = false;
+        }
+      });
+
       router.push({ path: "/news-feed" });
     })
     .catch((error) => {
