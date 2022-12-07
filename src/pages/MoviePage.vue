@@ -66,8 +66,8 @@
         <div class="overflow-scroll h-[26vh]">
           <div
             :id="quote.id + 'delete'"
-            v-for="quote in quotes"
-            :key="quote.image"
+            v-for="(quote, index) in quotes"
+            :key="index"
             class="w-[50.625rem] h-[16.75rem] mb-10 py-6 px-8 bg-[#11101A] relative"
           >
             <img
@@ -113,9 +113,17 @@
                 <p class="text-xl mr-3">{{ quote.comment_number }}</p>
                 <img src="@/assets/comment.svg" alt="comment" />
               </div>
-              <div class="flex mr-8 items-center">
-                <p class="text-xl mr-3">5</p>
-                <img src="@/assets/like.svg" alt="like" />
+              <div
+                @click="likeDislike(quote.id, index)"
+                class="flex mr-8 items-center cursor-pointer"
+              >
+                <p class="text-xl mr-3">{{ quotesLikes[index] }}</p>
+                <img
+                  v-if="userLikes[index]"
+                  src="@/assets/activeLike.svg"
+                  alt="like"
+                />
+                <img v-else src="@/assets/like.svg" alt="like" />
               </div>
             </div>
           </div>
@@ -133,12 +141,15 @@ import router from "@/router/index.js";
 import axios from "axios";
 import { ref, onBeforeMount, watch } from "vue";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "@/store.js";
 
 const movie = ref(null);
 const movieId = useRouter().currentRoute.value.params.movieId;
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 const BACK_URL_IMAGE = BACK_URL.replace("/api", "");
 const quotes = ref(null);
+const quotesLikes = ref([]);
+const userLikes = ref([]);
 const emit = defineEmits(["movie"]);
 
 watch(movie, () => {
@@ -168,6 +179,26 @@ function quoteEditRoute(quoteId) {
 
 function addQuoteRoute() {
   router.push({ path: "/movies/" + movieId + "/add-quote" });
+}
+
+function likeDislike(quoteId, index) {
+  axios
+    .post(BACK_URL + "/like-dislike", {
+      quote_id: quoteId,
+      user_id: useAuthStore().userId,
+    })
+    .then((response) => {
+      if (response.status === 201) {
+        quotesLikes.value[index]++;
+        userLikes.value[index] = true;
+      } else {
+        quotesLikes.value[index]--;
+        userLikes.value[index] = false;
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 
 function deleteMovie() {
@@ -203,9 +234,14 @@ onBeforeMount(() => {
       router.push({ path: "/error-404" });
     });
   axios
-    .post(BACK_URL + "/get-quotes", { movie_id: movieId })
+    .post(BACK_URL + "/get-quotes", {
+      movie_id: movieId,
+      user_id: useAuthStore().userId,
+    })
     .then((response) => {
-      quotes.value = response.data;
+      quotes.value = response.data[0];
+      quotesLikes.value = response.data[1];
+      userLikes.value = response.data[2];
     })
     .catch(() => {
       router.push({ path: "/error-404" });

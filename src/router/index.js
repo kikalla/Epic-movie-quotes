@@ -19,7 +19,7 @@ import QuoteEditPage from "@/pages/QuoteEditPage.vue";
 import Error401Page from "@/pages/Error401Page.vue";
 import { useAuthStore } from "@/store.js";
 import axios from "axios";
-import guards from "@/router/guards.js";
+// import guards from "@/router/guards.js";
 
 axios.defaults.withCredentials = true;
 
@@ -30,13 +30,13 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomePage,
-      beforeEnter: guards.notAuthenticated,
+      // beforeEnter: guards.notAuthenticated,
     },
     {
       path: "/register",
       name: "register",
       component: RegisterPage,
-      beforeEnter: guards.notAuthenticated,
+      // beforeEnter: guards.notAuthenticated,
     },
     {
       path: "/verification-send",
@@ -52,13 +52,13 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: LoginPage,
-      beforeEnter: guards.notAuthenticated,
+      // beforeEnter: guards.notAuthenticated,
     },
     {
       path: "/news-feed",
       name: "news-feed",
       component: NewsPage,
-      beforeEnter: guards.isAuthenticated,
+      // beforeEnter: guards.isAuthenticated,
     },
     {
       path: "/error-401",

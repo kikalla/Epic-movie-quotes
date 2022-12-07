@@ -72,9 +72,13 @@
               <p class="text-xl mr-3">{{ quote.comment_number }}</p>
               <img src="@/assets/comment.svg" alt="comment" />
             </div>
-            <div class="flex items-center mr-8">
-              <p class="text-xl mr-3">5</p>
-              <img src="@/assets/like.svg" alt="like" />
+            <div
+              @click="likeDislike"
+              class="flex items-center mr-8 cursor-pointer"
+            >
+              <p class="text-xl mr-3">{{ likes }}</p>
+              <img v-if="liked" src="@/assets/activeLike.svg" alt="like" />
+              <img v-else src="@/assets/like.svg" alt="like" />
             </div>
           </div>
           <div class="overflow-scroll h-[26vh] mt-4">
@@ -123,6 +127,8 @@ const BACK_URL = import.meta.env.VITE_BACK_URL;
 const BACK_URL_IMAGE = BACK_URL.replace("/api", "");
 const showComments = ref(false);
 const quote = ref(null);
+const likes = ref();
+const liked = ref(false);
 const comment = ref("");
 const comments = ref([]);
 const usernames = ref([]);
@@ -144,6 +150,26 @@ function deleteQuote() {
     .post(BACK_URL + "/delete-quote", { quote_id: quoteId })
     .then(() => {
       router.push({ path: "/movies/" + quote.value.movie_id });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+function likeDislike() {
+  axios
+    .post(BACK_URL + "/like-dislike", {
+      quote_id: quoteId,
+      user_id: useAuthStore().userId,
+    })
+    .then((response) => {
+      if (response.status === 201) {
+        likes.value++;
+        liked.value = true;
+      } else {
+        likes.value--;
+        liked.value = false;
+      }
     })
     .catch((error) => {
       console.log(error);
@@ -184,6 +210,18 @@ onBeforeMount(() => {
       if (comments.value.length !== 0) {
         showComments.value = true;
       }
+    })
+    .catch(() => {
+      router.push({ path: "/error-404" });
+    });
+  axios
+    .post(BACK_URL + "/get-likes", {
+      quote_id: quoteId,
+      user_id: useAuthStore().userId,
+    })
+    .then((response) => {
+      likes.value = response.data[0];
+      liked.value = response.data[1];
     })
     .catch(() => {
       router.push({ path: "/error-404" });
