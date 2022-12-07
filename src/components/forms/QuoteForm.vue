@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-[56rem] h-[58rem] px-8 bg-[#11101A] flex flex-col absolute top-28 left-[33rem] rounded-xl text-white"
+    class="w-[56rem] h-[54rem] px-8 bg-[#11101A] flex flex-col absolute top-28 left-[33rem] rounded-xl text-white"
   >
     <img
       @click="close()"
@@ -36,7 +36,7 @@
       </div>
     </div>
 
-    <form @submit.prevent="addMovie">
+    <form @submit.prevent="addQuote">
       <div
         class="border-[#6C757D] border rounded-lg flex justify-between items-start pt-2 my-5"
       >
@@ -65,7 +65,7 @@
       </div>
 
       <div
-        class="border-[#6C757D] border rounded-lg flex items-center h-[5.5rem] mb-5"
+        class="border-[#6C757D] border rounded-lg flex items-center h-[5.5rem] mb-16"
       >
         <img class="mx-4" src="@/assets/camera.svg" alt="camera" />
         <p class="text-xl">Drag & drop your image here or</p>
@@ -116,7 +116,7 @@ function handleChange(e) {
   image.value = file;
 }
 
-function addMovie() {
+function addQuote() {
   const formData = new FormData();
   formData.append("user_id", useAuthStore().userId);
   formData.append("quote_en", quoteEn.value);

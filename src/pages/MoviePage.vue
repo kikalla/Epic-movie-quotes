@@ -80,11 +80,14 @@
               :id="quote.id"
               class="absolute hidden w-64 h-52 pl-10 pt-9 bg-[#24222F] rounded-lg top-12 -right-48 z-10"
             >
-              <div class="flex">
+              <div
+                @click="quoteRoute(quote.id)"
+                class="flex cursor-pointer hover:bg-red-700"
+              >
                 <img class="mr-4" src="@/assets/openEye.svg" alt="eye" />
                 <p>View Quote</p>
               </div>
-              <div class="flex my-8">
+              <div @click="quoteEditRoute(quote.id)" class="flex my-8">
                 <img class="mr-4" src="@/assets/edit.svg" alt="eye" />
                 <p>Edit</p>
               </div>
@@ -106,11 +109,11 @@
             </div>
             <div class="border-t border-[#efefef] opacity-20 w-full"></div>
             <div class="flex items-center mt-6">
-              <div class="flex mr-8">
-                <p class="text-xl mr-3">5</p>
+              <div class="flex mr-8 items-center">
+                <p class="text-xl mr-3">{{ quote.comment_number }}</p>
                 <img src="@/assets/comment.svg" alt="comment" />
               </div>
-              <div class="flex mr-8">
+              <div class="flex mr-8 items-center">
                 <p class="text-xl mr-3">5</p>
                 <img src="@/assets/like.svg" alt="like" />
               </div>
@@ -155,6 +158,14 @@ function moviesRoute() {
   router.push({ path: "/movies" });
 }
 
+function quoteRoute(quoteId) {
+  router.push({ path: "/quote/" + quoteId });
+}
+
+function quoteEditRoute(quoteId) {
+  router.push({ path: "/quote/" + quoteId + "/edit" });
+}
+
 function addQuoteRoute() {
   router.push({ path: "/movies/" + movieId + "/add-quote" });
 }
@@ -172,7 +183,7 @@ function deleteMovie() {
 
 function deleteQuote(id, idDelete) {
   axios
-    .post(BACK_URL + "/delete-quote", { quote_id: id, movie_id: movieId })
+    .post(BACK_URL + "/delete-quote", { quote_id: id })
     .then(() => {
       document.getElementById(idDelete).remove();
       movie.value.quote_number = movie.value.quote_number - 1;
