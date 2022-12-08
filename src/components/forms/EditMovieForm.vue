@@ -142,7 +142,7 @@ const BACK_URL = import.meta.env.VITE_BACK_URL;
 const movieId = useRouter().currentRoute.value.params.movieId;
 
 function close() {
-  router.push({ path: "/movies" });
+  router.push({ path: "/movies/" + movieId });
 }
 
 function handleChange(e) {

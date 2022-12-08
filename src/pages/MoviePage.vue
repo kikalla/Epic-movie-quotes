@@ -15,11 +15,11 @@
       </div>
 
       <div class="w-4/5 pt-8 px-20 bg-[#0D0B14] text-white">
-        <div class="flex flex-col mb-16">
+        <div class="flex flex-col mb-14">
           <h2 class="text-2xl font-medium mb-8">Movie discription</h2>
           <div v-if="movie" class="flex">
             <img
-              class="w-1/2 h-96 rounded-xl object-cover"
+              class="w-[50.625rem] h-[27.5rem] rounded-xl object-cover"
               :src="BACK_URL_IMAGE + '/storage/' + movie.image"
               alt=""
             />
@@ -31,11 +31,11 @@
                 <div
                   class="flex justify-between items-center w-36 h-10 px-7 py-2 rounded-lg bg-[#24222F]"
                 >
-                  <a @click="editMovie"
+                  <a @click="editMovie" class="cursor-pointer"
                     ><img src="@/assets/edit.svg" alt="edit"
                   /></a>
                   <div class="h-3/4 border-[#6C757D] border"></div>
-                  <a @click="deleteMovie"
+                  <a @click="deleteMovie" class="cursor-pointer"
                     ><img src="@/assets/delete.svg" alt="delete"
                   /></a>
                 </div>
@@ -49,11 +49,83 @@
               </p>
             </div>
           </div>
+
           <div class="flex justify-start items-center mt-10">
-            <h2 class="text-2xl font-medium mr-8">Quotes (Total 7)</h2>
-            <RedButton class="flex items-center h-12 rounded-md p-4">
+            <h2 v-if="movie" class="text-2xl font-medium mr-8">
+              Quotes (Total {{ movie.quote_number }})
+            </h2>
+            <RedButton
+              @click="addQuoteRoute"
+              class="flex items-center h-12 rounded-md p-4"
+            >
               <img class="mr-2" src="@/assets/plus.svg" alt="plus" />Add quote
             </RedButton>
+          </div>
+        </div>
+
+        <div class="overflow-scroll h-[26vh]">
+          <div
+            :id="quote.id + 'delete'"
+            v-for="(quote, index) in quotes"
+            :key="index"
+            class="w-[50.625rem] h-[16.75rem] mb-10 py-6 px-8 bg-[#11101A] relative"
+          >
+            <img
+              @click="showQuoteOptions(quote.id)"
+              class="absolute right-9 top-9 cursor-pointer"
+              src="@/assets/dots.svg"
+              alt="dots"
+            />
+            <div
+              :id="quote.id"
+              class="absolute hidden w-64 h-52 pl-10 pt-9 bg-[#24222F] rounded-lg top-12 -right-48 z-10"
+            >
+              <div
+                @click="quoteRoute(quote.id)"
+                class="flex cursor-pointer hover:bg-red-700"
+              >
+                <img class="mr-4" src="@/assets/openEye.svg" alt="eye" />
+                <p>View Quote</p>
+              </div>
+              <div @click="quoteEditRoute(quote.id)" class="flex my-8">
+                <img class="mr-4" src="@/assets/edit.svg" alt="eye" />
+                <p>Edit</p>
+              </div>
+              <div
+                @click="deleteQuote(quote.id, quote.id + 'delete')"
+                class="flex cursor-pointer"
+              >
+                <img class="mr-4" src="@/assets/delete.svg" alt="eye" />
+                <p>Delete</p>
+              </div>
+            </div>
+            <div class="flex items-center mb-6">
+              <img
+                class="w-56 h-36 object-cover mr-8"
+                :src="BACK_URL_IMAGE + '/storage/' + quote.image"
+                alt="photo"
+              />
+              <p class="text-2xl">"{{ quote.quote.en }}"</p>
+            </div>
+            <div class="border-t border-[#efefef] opacity-20 w-full"></div>
+            <div class="flex items-center mt-6">
+              <div class="flex mr-8 items-center">
+                <p class="text-xl mr-3">{{ quote.comment_number }}</p>
+                <img src="@/assets/comment.svg" alt="comment" />
+              </div>
+              <div
+                @click="likeDislike(quote.id, index)"
+                class="flex mr-8 items-center cursor-pointer"
+              >
+                <p class="text-xl mr-3">{{ quotesLikes[index] }}</p>
+                <img
+                  v-if="userLikes[index]"
+                  src="@/assets/activeLike.svg"
+                  alt="like"
+                />
+                <img v-else src="@/assets/like.svg" alt="like" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -67,13 +139,27 @@ import UserInfo from "@/components/layout/UserInfo.vue";
 import RedButton from "@/components/ui/RedButton.vue";
 import router from "@/router/index.js";
 import axios from "axios";
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, watch } from "vue";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "@/store.js";
 
 const movie = ref(null);
 const movieId = useRouter().currentRoute.value.params.movieId;
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 const BACK_URL_IMAGE = BACK_URL.replace("/api", "");
+const quotes = ref(null);
+const quotesLikes = ref([]);
+const userLikes = ref([]);
+const emit = defineEmits(["movie"]);
+
+watch(movie, () => {
+  emit("movie", movie.value);
+});
+
+function showQuoteOptions(id) {
+  let div = document.getElementById(id);
+  div.classList.toggle("hidden");
+}
 
 function editMovie() {
   router.push({ path: "/movies/" + movieId + "/edit" });
@@ -81,6 +167,38 @@ function editMovie() {
 
 function moviesRoute() {
   router.push({ path: "/movies" });
+}
+
+function quoteRoute(quoteId) {
+  router.push({ path: "/quote/" + quoteId });
+}
+
+function quoteEditRoute(quoteId) {
+  router.push({ path: "/quote/" + quoteId + "/edit" });
+}
+
+function addQuoteRoute() {
+  router.push({ path: "/movies/" + movieId + "/add-quote" });
+}
+
+function likeDislike(quoteId, index) {
+  axios
+    .post(BACK_URL + "/like-dislike", {
+      quote_id: quoteId,
+      user_id: useAuthStore().userId,
+    })
+    .then((response) => {
+      if (response.status === 201) {
+        quotesLikes.value[index]++;
+        userLikes.value[index] = true;
+      } else {
+        quotesLikes.value[index]--;
+        userLikes.value[index] = false;
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 
 function deleteMovie() {
@@ -94,11 +212,36 @@ function deleteMovie() {
     });
 }
 
+function deleteQuote(id, idDelete) {
+  axios
+    .post(BACK_URL + "/delete-quote", { quote_id: id })
+    .then(() => {
+      document.getElementById(idDelete).remove();
+      movie.value.quote_number = movie.value.quote_number - 1;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
 onBeforeMount(() => {
   axios
     .post(BACK_URL + "/get-movie", { movie_id: movieId })
     .then((response) => {
       movie.value = response.data;
+    })
+    .catch(() => {
+      router.push({ path: "/error-404" });
+    });
+  axios
+    .post(BACK_URL + "/get-quotes", {
+      movie_id: movieId,
+      user_id: useAuthStore().userId,
+    })
+    .then((response) => {
+      quotes.value = response.data[0];
+      quotesLikes.value = response.data[1];
+      userLikes.value = response.data[2];
     })
     .catch(() => {
       router.push({ path: "/error-404" });
