@@ -195,7 +195,7 @@ function loginUser() {
           return form.value.setFieldError("password", error.response.data);
         }
         if (error.response.data.errors.email) {
-          form.value.setFieldError("email", "This email is not registered");
+          form.value.setFieldError("email", error.response.data.errors.email);
           return form.value.setFieldError("password", "Wrong password");
         }
       }
