@@ -4,9 +4,9 @@
     <div class="flex">
       <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
         <UserInfo></UserInfo>
-        <div class="flex items-center my-11 ml-3">
+        <div @click="newsRoute" class="flex items-center my-11 ml-3">
           <img src="@/assets/home.svg" alt="home" />
-          <a href="" class="text-2xl ml-11">News feed</a>
+          <a class="text-2xl ml-11">News feed</a>
         </div>
         <div @click="moviesRoute" class="flex items-center ml-3 cursor-pointer">
           <img src="@/assets/activeMovie.svg" alt="home" />
@@ -76,6 +76,10 @@ const movies = ref({});
 
 function moviesRoute() {
   router.push({ path: "/movies" });
+}
+
+function newsRoute() {
+  router.push({ path: "/news-feed" });
 }
 
 function movieRoute(movieId) {

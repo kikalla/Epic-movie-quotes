@@ -174,7 +174,7 @@ function updateMovie() {
       router.push({ path: "/movies/" + movieId });
     })
     .catch((error) => {
-      console.log(error.response);
+      if (error.response.status === 403) router.push({ path: "/error-403" });
     });
 }
 

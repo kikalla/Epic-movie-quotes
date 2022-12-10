@@ -4,9 +4,9 @@
     <div class="flex">
       <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
         <UserInfo></UserInfo>
-        <div class="flex items-center my-11 ml-3">
+        <div @click="newsRoute" class="flex items-center my-11 ml-3">
           <img src="@/assets/home.svg" alt="home" />
-          <a href="" class="text-2xl ml-11">News feed</a>
+          <a class="text-2xl ml-11">News feed</a>
         </div>
         <div @click="moviesRoute" class="flex items-center ml-3 cursor-pointer">
           <img src="@/assets/activeMovie.svg" alt="home" />
@@ -25,12 +25,19 @@
             alt="close"
           />
           <div
+            v-if="userId === quote.user_id || userId === movieUserId"
             class="absolute left-4 top-4 flex justify-between items-center w-36 h-10 px-7 py-2 rounded-lg"
           >
-            <a @click="editQuote" class="cursor-pointer"
+            <a
+              v-if="userId === quote.user_id"
+              @click="editQuote"
+              class="cursor-pointer"
               ><img src="@/assets/edit.svg" alt="edit"
             /></a>
-            <div class="h-3/4 border-[#6C757D] border"></div>
+            <div
+              v-if="userId === quote.user_id"
+              class="h-3/4 border-[#6C757D] border"
+            ></div>
             <a @click="deleteQuote" class="cursor-pointer"
               ><img src="@/assets/delete.svg" alt="delete"
             /></a>
@@ -43,7 +50,7 @@
           </div>
           <div class="flex items-center">
             <img
-              :src="userImage"
+              :src="creatorImage"
               class="w-[3.75rem] h-[3.75rem] rounded-[50%] object-cover"
               alt="profile"
             />
@@ -132,6 +139,7 @@ import router from "@/router/index.js";
 import axiosInstance from "@/config/axios.js";
 import { ref, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "@/store.js";
 
 const quoteId = useRouter().currentRoute.value.params.quoteId;
 const BACK_URL = import.meta.env.VITE_BACK_URL;
@@ -145,10 +153,17 @@ const comments = ref([]);
 const usernames = ref([]);
 const usersImages = ref([]);
 const userImage = ref(null);
+const creatorImage = ref(null);
 const username = ref(null);
+const userId = useAuthStore().userId;
+const movieUserId = ref(null);
 
 function moviesRoute() {
   router.push({ path: "/movies" });
+}
+
+function newsRoute() {
+  router.push({ path: "/news-feed" });
 }
 
 function editQuote() {
@@ -166,7 +181,7 @@ function deleteQuote() {
       router.push({ path: "/movies/" + quote.value.movie_id });
     })
     .catch((error) => {
-      console.log(error);
+      if (error.response.status === 403) router.push({ path: "/error-403" });
     });
 }
 
@@ -194,18 +209,20 @@ function quoteComment() {
     comment: comment.value,
     quote_id: quote.value.id,
   };
-  axiosInstance.post(BACK_URL + "/add-comment", data).then((response) => {
-    comment.value = "";
-    quote.value.comment_number = quote.value.comment_number + 1;
-    comments.value.push(response.data[0]);
-    usernames.value.push(response.data[1]);
-    if (response.data[2] === BACK_URL_IMAGE + "/images/default.jpg") {
-      usersImages.value.push(response.data[2]);
-    } else {
-      usersImages.value.push(BACK_URL_IMAGE + "/storage/" + response.data[2]);
-    }
-    showComments.value = true;
-  });
+  if (comment.value !== "") {
+    axiosInstance.post(BACK_URL + "/add-comment", data).then((response) => {
+      comment.value = "";
+      quote.value.comment_number = quote.value.comment_number + 1;
+      comments.value.push(response.data[0]);
+      usernames.value.push(response.data[1]);
+      if (response.data[2] === BACK_URL_IMAGE + "/images/default.jpg") {
+        usersImages.value.push(response.data[2]);
+      } else {
+        usersImages.value.push(BACK_URL_IMAGE + "/storage/" + response.data[2]);
+      }
+      showComments.value = true;
+    });
+  }
 }
 
 onBeforeMount(() => {
@@ -214,11 +231,12 @@ onBeforeMount(() => {
     .then((response) => {
       quote.value = response.data[0];
       if (response.data[1] === BACK_URL_IMAGE + "/images/default.jpg") {
-        userImage.value = response.data[1];
+        creatorImage.value = response.data[1];
       } else {
-        userImage.value = BACK_URL_IMAGE + "/storage/" + response.data[1];
+        creatorImage.value = BACK_URL_IMAGE + "/storage/" + response.data[1];
       }
       username.value = response.data[2];
+      movieUserId.value = response.data[3];
     })
     .catch(() => {
       router.push({ path: "/error-404" });
@@ -256,5 +274,12 @@ onBeforeMount(() => {
     .catch(() => {
       router.push({ path: "/error-404" });
     });
+  axiosInstance.post(BACK_URL + "/get-user-info").then((response) => {
+    if (response.data[0] === BACK_URL_IMAGE + "/images/default.jpg") {
+      userImage.value = response.data[0];
+    } else {
+      userImage.value = BACK_URL_IMAGE + "/storage/" + response.data[0];
+    }
+  });
 });
 </script>
