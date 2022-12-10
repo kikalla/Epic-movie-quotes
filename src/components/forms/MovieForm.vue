@@ -128,8 +128,7 @@
 <script setup>
 import RedButton from "@/components/ui/RedButton.vue";
 import router from "@/router/index.js";
-import axios from "axios";
-import { useAuthStore } from "@/store.js";
+import axiosInstance from "@/config/axios.js";
 import { ref } from "vue";
 
 const titleEn = ref("");
@@ -152,7 +151,6 @@ function handleChange(e) {
 
 function addMovie() {
   const formData = new FormData();
-  formData.append("user_id", useAuthStore().userId);
   formData.append("title_en", titleEn.value);
   formData.append("title_ka", titleKa.value);
   formData.append("director_en", directorEn.value);
@@ -161,7 +159,7 @@ function addMovie() {
   formData.append("description_ka", descriptionKa.value);
   formData.append("image", image.value);
 
-  axios
+  axiosInstance
     .post(BACK_URL + "/movies/add-movie", formData)
     .then(() => {
       router.push({ path: "/movies" });

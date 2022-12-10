@@ -67,9 +67,8 @@ import PageHeader from "@/components/layout/PageHeader.vue";
 import UserInfo from "@/components/layout/UserInfo.vue";
 import RedButton from "@/components/ui/RedButton.vue";
 import router from "@/router/index.js";
-import axios from "axios";
+import axiosInstance from "@/config/axios.js";
 import { ref, onBeforeMount } from "vue";
-import { useAuthStore } from "@/store.js";
 
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 const BACK_URL_IMAGE = BACK_URL.replace("/api", "");
@@ -88,10 +87,8 @@ function addMovieRoute() {
 }
 
 onBeforeMount(() => {
-  axios
-    .post(BACK_URL + "/get-movies", { user_id: useAuthStore().userId })
-    .then((response) => {
-      movies.value = response.data;
-    });
+  axiosInstance.post(BACK_URL + "/get-movies").then((response) => {
+    movies.value = response.data;
+  });
 });
 </script>

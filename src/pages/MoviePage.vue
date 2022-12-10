@@ -138,10 +138,9 @@ import PageHeader from "@/components/layout/PageHeader.vue";
 import UserInfo from "@/components/layout/UserInfo.vue";
 import RedButton from "@/components/ui/RedButton.vue";
 import router from "@/router/index.js";
-import axios from "axios";
+import axiosInstance from "@/config/axios.js";
 import { ref, onBeforeMount, watch } from "vue";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "@/store.js";
 
 const movie = ref(null);
 const movieId = useRouter().currentRoute.value.params.movieId;
@@ -182,10 +181,9 @@ function addQuoteRoute() {
 }
 
 function likeDislike(quoteId, index) {
-  axios
+  axiosInstance
     .post(BACK_URL + "/like-dislike", {
       quote_id: quoteId,
-      user_id: useAuthStore().userId,
     })
     .then((response) => {
       if (response.status === 201) {
@@ -202,7 +200,7 @@ function likeDislike(quoteId, index) {
 }
 
 function deleteMovie() {
-  axios
+  axiosInstance
     .post(BACK_URL + "/delete-movie", { movie_id: movieId })
     .then(() => {
       router.push({ path: "/movies" });
@@ -213,7 +211,7 @@ function deleteMovie() {
 }
 
 function deleteQuote(id, idDelete) {
-  axios
+  axiosInstance
     .post(BACK_URL + "/delete-quote", { quote_id: id })
     .then(() => {
       document.getElementById(idDelete).remove();
@@ -225,7 +223,7 @@ function deleteQuote(id, idDelete) {
 }
 
 onBeforeMount(() => {
-  axios
+  axiosInstance
     .post(BACK_URL + "/get-movie", { movie_id: movieId })
     .then((response) => {
       movie.value = response.data;
@@ -233,10 +231,9 @@ onBeforeMount(() => {
     .catch(() => {
       router.push({ path: "/error-404" });
     });
-  axios
+  axiosInstance
     .post(BACK_URL + "/get-quotes", {
       movie_id: movieId,
-      user_id: useAuthStore().userId,
     })
     .then((response) => {
       quotes.value = response.data[0];

@@ -127,7 +127,7 @@
 <script setup>
 import RedButton from "@/components/ui/RedButton.vue";
 import router from "@/router/index.js";
-import axios from "axios";
+import axiosInstance from "@/config/axios.js";
 import { ref, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 
@@ -161,7 +161,7 @@ function updateMovie() {
   formData.append("image", image.value);
   formData.append("movie_id", movieId);
 
-  axios
+  axiosInstance
     .post(BACK_URL + "/edit-movie", formData)
     .then(() => {
       router.push({ path: "/movies/" + movieId });
@@ -172,7 +172,7 @@ function updateMovie() {
 }
 
 onBeforeMount(() => {
-  axios
+  axiosInstance
     .post(BACK_URL + "/get-movie", { movie_id: movieId })
     .then((response) => {
       const movie = response.data;

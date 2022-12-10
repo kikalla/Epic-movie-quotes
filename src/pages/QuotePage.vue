@@ -117,10 +117,9 @@
 import PageHeader from "@/components/layout/PageHeader.vue";
 import UserInfo from "@/components/layout/UserInfo.vue";
 import router from "@/router/index.js";
-import axios from "axios";
+import axiosInstance from "@/config/axios.js";
 import { ref, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "@/store.js";
 
 const quoteId = useRouter().currentRoute.value.params.quoteId;
 const BACK_URL = import.meta.env.VITE_BACK_URL;
@@ -146,7 +145,7 @@ function close() {
 }
 
 function deleteQuote() {
-  axios
+  axiosInstance
     .post(BACK_URL + "/delete-quote", { quote_id: quoteId })
     .then(() => {
       router.push({ path: "/movies/" + quote.value.movie_id });
@@ -157,10 +156,9 @@ function deleteQuote() {
 }
 
 function likeDislike() {
-  axios
+  axiosInstance
     .post(BACK_URL + "/like-dislike", {
       quote_id: quoteId,
-      user_id: useAuthStore().userId,
     })
     .then((response) => {
       if (response.status === 201) {
@@ -180,9 +178,8 @@ function quoteComment() {
   const data = {
     comment: comment.value,
     quote_id: quote.value.id,
-    user_id: useAuthStore().userId,
   };
-  axios.post(BACK_URL + "/add-comment", data).then((response) => {
+  axiosInstance.post(BACK_URL + "/add-comment", data).then((response) => {
     comment.value = "";
     quote.value.comment_number = quote.value.comment_number + 1;
     comments.value.push(response.data[0]);
@@ -192,7 +189,7 @@ function quoteComment() {
 }
 
 onBeforeMount(() => {
-  axios
+  axiosInstance
     .post(BACK_URL + "/get-quote", { quote_id: quoteId })
     .then((response) => {
       quote.value = response.data;
@@ -200,7 +197,7 @@ onBeforeMount(() => {
     .catch(() => {
       router.push({ path: "/error-404" });
     });
-  axios
+  axiosInstance
     .post(BACK_URL + "/get-comments", {
       quote_id: quoteId,
     })
@@ -214,10 +211,9 @@ onBeforeMount(() => {
     .catch(() => {
       router.push({ path: "/error-404" });
     });
-  axios
+  axiosInstance
     .post(BACK_URL + "/get-likes", {
       quote_id: quoteId,
-      user_id: useAuthStore().userId,
     })
     .then((response) => {
       likes.value = response.data[0];

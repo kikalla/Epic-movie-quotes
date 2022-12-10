@@ -92,8 +92,7 @@
 <script setup>
 import RedButton from "@/components/ui/RedButton.vue";
 import router from "@/router/index.js";
-import axios from "axios";
-import { useAuthStore } from "@/store.js";
+import axiosInstance from "@/config/axios.js";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -118,13 +117,12 @@ function handleChange(e) {
 
 function addQuote() {
   const formData = new FormData();
-  formData.append("user_id", useAuthStore().userId);
   formData.append("quote_en", quoteEn.value);
   formData.append("quote_ka", quoteKa.value);
   formData.append("movie_id", movieId);
   formData.append("image", image.value);
 
-  axios
+  axiosInstance
     .post(BACK_URL + "/add-quote", formData)
     .then(() => {
       router.push({ path: "/movies/" + movieId });

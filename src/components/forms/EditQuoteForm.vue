@@ -91,7 +91,7 @@
 
 <script setup>
 import router from "@/router/index.js";
-import axios from "axios";
+import axiosInstance from "@/config/axios.js";
 import RedButton from "@/components/ui/RedButton.vue";
 import { ref, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
@@ -116,7 +116,7 @@ function handleChange(e) {
 }
 
 function deleteQuote() {
-  axios
+  axiosInstance
     .post(BACK_URL + "/delete-quote", { quote_id: quoteId })
     .then(() => {
       router.push({ path: "/movies/" + quote.value.movie_id });
@@ -133,7 +133,7 @@ function updateQuote() {
   formData.append("quote_ka", quoteKa.value);
   formData.append("image", image.value);
 
-  axios
+  axiosInstance
     .post(BACK_URL + "/edit-quote", formData)
     .then(() => {
       router.push({ path: "/quote/" + quoteId });
@@ -144,7 +144,7 @@ function updateQuote() {
 }
 
 onBeforeMount(() => {
-  axios
+  axiosInstance
     .post(BACK_URL + "/get-quote", { quote_id: quoteId })
     .then((response) => {
       quote.value = response.data;

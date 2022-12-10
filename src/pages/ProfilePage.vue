@@ -428,7 +428,11 @@ onBeforeMount(() => {
     googleUser.value = response.data[2];
     primaryEmail.value = emails.value[emails.value.length - 1];
     username.value = response.data[3];
-    image.value = BACK_URL_IMAGE + "/storage/" + response.data[4];
+    if (response.data[4] === BACK_URL_IMAGE + "/images/default.jpg") {
+      image.value = response.data[4];
+    } else {
+      image.value = BACK_URL_IMAGE + "/storage/" + response.data[4];
+    }
 
     emails.value.pop();
     verifieds.value.pop();
