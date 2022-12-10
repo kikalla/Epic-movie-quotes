@@ -42,8 +42,12 @@
             ></div>
           </div>
           <div class="flex items-center">
-            <img src="@/assets/default.png" alt="profile" />
-            <p class="text-xl ml-4">Nino Tabagari</p>
+            <img
+              :src="userImage"
+              class="w-[3.75rem] h-[3.75rem] rounded-[50%] object-cover"
+              alt="profile"
+            />
+            <p class="text-xl ml-4">{{ username }}</p>
           </div>
           <div
             class="h-12 border-[#6C757D] border rounded-md flex justify-between items-center my-5"
@@ -84,7 +88,11 @@
           <div class="overflow-scroll h-[26vh] mt-4">
             <div v-for="(comment, index) in comments" :key="index">
               <div class="flex items-center">
-                <img class="w-[3.25rem]" src="@/assets/default.png" alt="" />
+                <img
+                  class="w-[3.25rem] h-[3.25rem] rounded-[50%] object-cover"
+                  :src="usersImages[index]"
+                  alt="user-image"
+                />
                 <h2 class="text-xl ml-4">{{ usernames[index] }}</h2>
               </div>
               <div>
@@ -99,7 +107,11 @@
             <h2 class="text-2xl" v-if="!showComments">No comments yet</h2>
           </div>
           <form @submit.prevent="quoteComment" class="flex items-center">
-            <img class="w-[3.25rem]" src="@/assets/default.png" alt="" />
+            <img
+              class="w-[3.25rem] h-[3.25rem] rounded-[50%] object-cover"
+              :src="userImage"
+              alt="user-image"
+            />
             <input
               v-model="comment"
               class="bg-[#24222F] px-4 h-12 ml-3 w-11/12 rounded-lg outline-none placeholder:text-white placeholder:text-lg"
@@ -131,6 +143,9 @@ const liked = ref(false);
 const comment = ref("");
 const comments = ref([]);
 const usernames = ref([]);
+const usersImages = ref([]);
+const userImage = ref(null);
+const username = ref(null);
 
 function moviesRoute() {
   router.push({ path: "/movies" });
@@ -184,6 +199,11 @@ function quoteComment() {
     quote.value.comment_number = quote.value.comment_number + 1;
     comments.value.push(response.data[0]);
     usernames.value.push(response.data[1]);
+    if (response.data[2] === BACK_URL_IMAGE + "/images/default.jpg") {
+      usersImages.value.push(response.data[2]);
+    } else {
+      usersImages.value.push(BACK_URL_IMAGE + "/storage/" + response.data[2]);
+    }
     showComments.value = true;
   });
 }
@@ -192,7 +212,13 @@ onBeforeMount(() => {
   axiosInstance
     .post(BACK_URL + "/get-quote", { quote_id: quoteId })
     .then((response) => {
-      quote.value = response.data;
+      quote.value = response.data[0];
+      if (response.data[1] === BACK_URL_IMAGE + "/images/default.jpg") {
+        userImage.value = response.data[1];
+      } else {
+        userImage.value = BACK_URL_IMAGE + "/storage/" + response.data[1];
+      }
+      username.value = response.data[2];
     })
     .catch(() => {
       router.push({ path: "/error-404" });
@@ -207,6 +233,14 @@ onBeforeMount(() => {
       if (comments.value.length !== 0) {
         showComments.value = true;
       }
+      response.data[2].forEach((image, index) => {
+        if (image === BACK_URL_IMAGE + "/images/default.jpg") {
+          image.value = BACK_URL_IMAGE + "/images/default.jpg";
+          usersImages.value[index] = image;
+        } else {
+          usersImages.value[index] = BACK_URL_IMAGE + "/storage/" + image;
+        }
+      });
     })
     .catch(() => {
       router.push({ path: "/error-404" });

@@ -21,8 +21,12 @@
         <div class="border-t border-[#efefef] opacity-20 my-6 w-[108%]"></div>
       </div>
       <div class="flex items-center">
-        <img src="@/assets/default.png" alt="profile" />
-        <p class="text-xl ml-4">Nino Tabagari</p>
+        <img
+          class="w-[3.75rem] h-[3.75rem] rounded-[50%] object-cover"
+          :src="userImage"
+          alt="profile"
+        />
+        <p class="text-xl ml-4">{{ username }}</p>
       </div>
       <form @submit.prevent="updateQuote">
         <div
@@ -104,6 +108,8 @@ const quoteEn = ref("");
 const quoteKa = ref("");
 const image = ref(null);
 const chosenImage = ref(null);
+const userImage = ref(null);
+const username = ref(null);
 
 function close() {
   router.push({ path: "/quote/" + quoteId });
@@ -147,9 +153,15 @@ onBeforeMount(() => {
   axiosInstance
     .post(BACK_URL + "/get-quote", { quote_id: quoteId })
     .then((response) => {
-      quote.value = response.data;
+      quote.value = response.data[0];
       quoteEn.value = quote.value.quote.en;
       quoteKa.value = quote.value.quote.ka;
+      username.value = response.data[2];
+      if (response.data[1] === BACK_URL_IMAGE + "/images/default.jpg") {
+        userImage.value = response.data[1];
+      } else {
+        userImage.value = BACK_URL_IMAGE + "/storage/" + response.data[1];
+      }
     })
     .catch(() => {
       router.push({ path: "/error-404" });

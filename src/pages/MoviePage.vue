@@ -68,7 +68,7 @@
             :id="quote.id + 'delete'"
             v-for="(quote, index) in quotes"
             :key="index"
-            class="w-[50.625rem] h-[16.75rem] mb-10 py-6 px-8 bg-[#11101A] relative"
+            class="w-[46.5rem] h-[16.75rem] mb-10 py-6 px-8 bg-[#11101A] relative"
           >
             <img
               @click="showQuoteOptions(quote.id)"
@@ -226,7 +226,7 @@ onBeforeMount(() => {
   axiosInstance
     .post(BACK_URL + "/get-movie", { movie_id: movieId })
     .then((response) => {
-      movie.value = response.data;
+      movie.value = response.data[0];
     })
     .catch(() => {
       router.push({ path: "/error-404" });
