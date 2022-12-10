@@ -16,6 +16,7 @@ import AddMoviePage from "@/pages/AddMoviePage.vue";
 import AddQuotePage from "@/pages/AddQuotePage.vue";
 import QuotePage from "@/pages/QuotePage.vue";
 import QuoteEditPage from "@/pages/QuoteEditPage.vue";
+import ProfilePage from "@/pages/ProfilePage.vue";
 import Error401Page from "@/pages/Error401Page.vue";
 import { useAuthStore } from "@/store.js";
 import axios from "axios";
@@ -121,6 +122,11 @@ const router = createRouter({
       path: "/quote/:quoteId/edit",
       name: "quote-edit",
       component: QuoteEditPage,
+    },
+    {
+      path: "/profile",
+      name: "profile",
+      component: ProfilePage,
     },
   ],
 });
