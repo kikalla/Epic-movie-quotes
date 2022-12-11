@@ -23,7 +23,6 @@
 import PageHeader from "@/components/layout/PageHeader.vue";
 import UserInfo from "@/components/layout/UserInfo.vue";
 import router from "@/router/index.js";
-// import axiosInstance from "@/config/axios.js";
 
 function moviesRoute() {
   router.push({ path: "/movies" });
