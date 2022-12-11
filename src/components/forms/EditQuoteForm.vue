@@ -157,8 +157,8 @@ onBeforeMount(() => {
       quoteEn.value = quote.value.quote.en;
       quoteKa.value = quote.value.quote.ka;
       username.value = response.data[2];
-      if (response.data[1] === BACK_URL_IMAGE + "/images/default.jpg") {
-        userImage.value = response.data[1];
+      if (response.data[1] === "/images/default.jpg") {
+        userImage.value = BACK_URL_IMAGE + response.data[1];
       } else {
         userImage.value = BACK_URL_IMAGE + "/storage/" + response.data[1];
       }

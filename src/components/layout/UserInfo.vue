@@ -28,8 +28,8 @@ function userRoute() {
 
 onBeforeMount(() => {
   axiosInstance.post(BACK_URL + "/get-user-info").then((response) => {
-    if (response.data[0] === BACK_URL_IMAGE + "/images/default.jpg") {
-      image.value = response.data[0];
+    if (response.data[0] === "/images/default.jpg") {
+      image.value = BACK_URL_IMAGE + response.data[0];
     } else {
       image.value = BACK_URL_IMAGE + "/storage/" + response.data[0];
     }

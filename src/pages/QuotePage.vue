@@ -215,8 +215,8 @@ function quoteComment() {
       quote.value.comment_number = quote.value.comment_number + 1;
       comments.value.push(response.data[0]);
       usernames.value.push(response.data[1]);
-      if (response.data[2] === BACK_URL_IMAGE + "/images/default.jpg") {
-        usersImages.value.push(response.data[2]);
+      if (response.data[2] === "/images/default.jpg") {
+        usersImages.value.push(BACK_URL_IMAGE + response.data[2]);
       } else {
         usersImages.value.push(BACK_URL_IMAGE + "/storage/" + response.data[2]);
       }
@@ -230,8 +230,8 @@ onBeforeMount(() => {
     .post(BACK_URL + "/get-quote", { quote_id: quoteId })
     .then((response) => {
       quote.value = response.data[0];
-      if (response.data[1] === BACK_URL_IMAGE + "/images/default.jpg") {
-        creatorImage.value = response.data[1];
+      if (response.data[1] === "/images/default.jpg") {
+        creatorImage.value = BACK_URL_IMAGE + response.data[1];
       } else {
         creatorImage.value = BACK_URL_IMAGE + "/storage/" + response.data[1];
       }
@@ -252,16 +252,18 @@ onBeforeMount(() => {
         showComments.value = true;
       }
       response.data[2].forEach((image, index) => {
-        if (image === BACK_URL_IMAGE + "/images/default.jpg") {
-          image.value = BACK_URL_IMAGE + "/images/default.jpg";
+        if (image === "/images/default.jpg") {
+          image = BACK_URL_IMAGE + "/images/default.jpg";
           usersImages.value[index] = image;
         } else {
           usersImages.value[index] = BACK_URL_IMAGE + "/storage/" + image;
         }
       });
     })
-    .catch(() => {
-      router.push({ path: "/error-404" });
+    .catch((error) => {
+      console.log(error);
+
+      // router.push({ path: "/error-404" });
     });
   axiosInstance
     .post(BACK_URL + "/get-likes", {
@@ -275,8 +277,8 @@ onBeforeMount(() => {
       router.push({ path: "/error-404" });
     });
   axiosInstance.post(BACK_URL + "/get-user-info").then((response) => {
-    if (response.data[0] === BACK_URL_IMAGE + "/images/default.jpg") {
-      userImage.value = response.data[0];
+    if (response.data[0] === "/images/default.jpg") {
+      userImage.value = BACK_URL_IMAGE + response.data[0];
     } else {
       userImage.value = BACK_URL_IMAGE + "/storage/" + response.data[0];
     }

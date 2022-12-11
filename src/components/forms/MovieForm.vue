@@ -179,8 +179,8 @@ onBeforeMount(() => {
   axiosInstance
     .post(BACK_URL + "/get-user-info")
     .then((response) => {
-      if (response.data[0] === BACK_URL_IMAGE + "/images/default.jpg") {
-        userImage.value = response.data[0];
+      if (response.data[0] === "/images/default.jpg") {
+        userImage.value = BACK_URL_IMAGE + response.data[0];
       } else {
         userImage.value = BACK_URL_IMAGE + "/storage/" + response.data[0];
       }
