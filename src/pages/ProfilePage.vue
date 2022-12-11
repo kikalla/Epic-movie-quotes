@@ -4,9 +4,9 @@
     <div class="flex">
       <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
         <UserInfo></UserInfo>
-        <div class="flex items-center my-11 ml-3">
+        <div @click="newsRoute" class="flex items-center my-11 ml-3">
           <img src="@/assets/home.svg" alt="home" />
-          <a href="" class="text-2xl ml-11">News feed</a>
+          <a class="text-2xl ml-11">News feed</a>
         </div>
         <div @click="moviesRoute" class="flex items-center ml-3 cursor-pointer">
           <img src="@/assets/activeMovie.svg" alt="home" />
@@ -335,6 +335,14 @@ const chosenImage = ref(null);
 const BACK_URL_IMAGE = BACK_URL.replace("/api", "");
 const form = ref(null);
 
+function moviesRoute() {
+  router.push({ path: "/movies" });
+}
+
+function newsRoute() {
+  router.push({ path: "/news-feed" });
+}
+
 function handleChange(e) {
   const file = e.target.files[0];
   newImage.value = file;
@@ -428,7 +436,11 @@ onBeforeMount(() => {
     googleUser.value = response.data[2];
     primaryEmail.value = emails.value[emails.value.length - 1];
     username.value = response.data[3];
-    image.value = BACK_URL_IMAGE + "/storage/" + response.data[4];
+    if (response.data[4] === "/images/default.jpg") {
+      image.value = BACK_URL_IMAGE + "/images/default.jpg";
+    } else {
+      image.value = BACK_URL_IMAGE + "/storage/" + response.data[4];
+    }
 
     emails.value.pop();
     verifieds.value.pop();

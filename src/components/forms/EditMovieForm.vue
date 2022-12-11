@@ -14,8 +14,12 @@
       <div class="border-t border-[#efefef] opacity-20 my-6 w-[108%]"></div>
     </div>
     <div class="flex items-center my-2">
-      <img src="@/assets/default.png" alt="profile" />
-      <p class="text-xl ml-4">Nino Tabagari</p>
+      <img
+        class="w-[3.75rem] h-[3.75rem] rounded-[50%] object-cover"
+        :src="userImage"
+        alt="profile"
+      />
+      <p class="text-xl ml-4">{{ username }}</p>
     </div>
     <form @submit.prevent="updateMovie">
       <div
@@ -127,7 +131,7 @@
 <script setup>
 import RedButton from "@/components/ui/RedButton.vue";
 import router from "@/router/index.js";
-import axios from "axios";
+import axiosInstance from "@/config/axios.js";
 import { ref, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 
@@ -138,7 +142,10 @@ const directorKa = ref("");
 const descriptionEn = ref("");
 const descriptionKa = ref("");
 const image = ref(null);
+const userImage = ref(null);
+const username = ref(null);
 const BACK_URL = import.meta.env.VITE_BACK_URL;
+const BACK_URL_IMAGE = BACK_URL.replace("/api", "");
 const movieId = useRouter().currentRoute.value.params.movieId;
 
 function close() {
@@ -161,27 +168,33 @@ function updateMovie() {
   formData.append("image", image.value);
   formData.append("movie_id", movieId);
 
-  axios
+  axiosInstance
     .post(BACK_URL + "/edit-movie", formData)
     .then(() => {
       router.push({ path: "/movies/" + movieId });
     })
     .catch((error) => {
-      console.log(error.response);
+      if (error.response.status === 403) router.push({ path: "/error-403" });
     });
 }
 
 onBeforeMount(() => {
-  axios
+  axiosInstance
     .post(BACK_URL + "/get-movie", { movie_id: movieId })
     .then((response) => {
-      const movie = response.data;
+      const movie = response.data[0];
       titleEn.value = movie.title.en;
       titleKa.value = movie.title.ka;
       directorEn.value = movie.director.en;
       directorKa.value = movie.director.ka;
       descriptionEn.value = movie.description.en;
       descriptionKa.value = movie.description.ka;
+      if (response.data[1] === "/images/default.jpg") {
+        userImage.value = BACK_URL_IMAGE + response.data[1];
+      } else {
+        userImage.value = BACK_URL_IMAGE + "/storage/" + response.data[1];
+      }
+      username.value = response.data[2];
     })
     .catch(() => {
       router.push({ path: "/error-404" });

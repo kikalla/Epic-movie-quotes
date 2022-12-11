@@ -21,8 +21,12 @@
         <div class="border-t border-[#efefef] opacity-20 my-6 w-[108%]"></div>
       </div>
       <div class="flex items-center">
-        <img src="@/assets/default.png" alt="profile" />
-        <p class="text-xl ml-4">Nino Tabagari</p>
+        <img
+          class="w-[3.75rem] h-[3.75rem] rounded-[50%] object-cover"
+          :src="userImage"
+          alt="profile"
+        />
+        <p class="text-xl ml-4">{{ username }}</p>
       </div>
       <form @submit.prevent="updateQuote">
         <div
@@ -91,7 +95,7 @@
 
 <script setup>
 import router from "@/router/index.js";
-import axios from "axios";
+import axiosInstance from "@/config/axios.js";
 import RedButton from "@/components/ui/RedButton.vue";
 import { ref, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
@@ -104,6 +108,8 @@ const quoteEn = ref("");
 const quoteKa = ref("");
 const image = ref(null);
 const chosenImage = ref(null);
+const userImage = ref(null);
+const username = ref(null);
 
 function close() {
   router.push({ path: "/quote/" + quoteId });
@@ -116,13 +122,13 @@ function handleChange(e) {
 }
 
 function deleteQuote() {
-  axios
+  axiosInstance
     .post(BACK_URL + "/delete-quote", { quote_id: quoteId })
     .then(() => {
       router.push({ path: "/movies/" + quote.value.movie_id });
     })
     .catch((error) => {
-      console.log(error);
+      if (error.response.status === 403) router.push({ path: "/error-403" });
     });
 }
 
@@ -133,23 +139,29 @@ function updateQuote() {
   formData.append("quote_ka", quoteKa.value);
   formData.append("image", image.value);
 
-  axios
+  axiosInstance
     .post(BACK_URL + "/edit-quote", formData)
     .then(() => {
       router.push({ path: "/quote/" + quoteId });
     })
     .catch((error) => {
-      console.log(error);
+      if (error.response.status === 403) router.push({ path: "/error-403" });
     });
 }
 
 onBeforeMount(() => {
-  axios
+  axiosInstance
     .post(BACK_URL + "/get-quote", { quote_id: quoteId })
     .then((response) => {
-      quote.value = response.data;
+      quote.value = response.data[0];
       quoteEn.value = quote.value.quote.en;
       quoteKa.value = quote.value.quote.ka;
+      username.value = response.data[2];
+      if (response.data[1] === "/images/default.jpg") {
+        userImage.value = BACK_URL_IMAGE + response.data[1];
+      } else {
+        userImage.value = BACK_URL_IMAGE + "/storage/" + response.data[1];
+      }
     })
     .catch(() => {
       router.push({ path: "/error-404" });

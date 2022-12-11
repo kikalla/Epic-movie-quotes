@@ -18,6 +18,8 @@ import QuotePage from "@/pages/QuotePage.vue";
 import QuoteEditPage from "@/pages/QuoteEditPage.vue";
 import ProfilePage from "@/pages/ProfilePage.vue";
 import Error401Page from "@/pages/Error401Page.vue";
+import Error403Page from "@/pages/Error403Page.vue";
+import Error404Page from "@/pages/Error404Page.vue";
 import { useAuthStore } from "@/store.js";
 import axios from "axios";
 // import guards from "@/router/guards.js";
@@ -60,11 +62,6 @@ const router = createRouter({
       name: "news-feed",
       component: NewsPage,
       // beforeEnter: guards.isAuthenticated,
-    },
-    {
-      path: "/error-401",
-      name: "error-401",
-      component: Error401Page,
     },
     {
       path: "/reset/password",
@@ -127,6 +124,21 @@ const router = createRouter({
       path: "/profile",
       name: "profile",
       component: ProfilePage,
+    },
+    {
+      path: "/error-401",
+      name: "error-401",
+      component: Error401Page,
+    },
+    {
+      path: "/error-403",
+      name: "error-403",
+      component: Error403Page,
+    },
+    {
+      path: "/error-404",
+      name: "error-404",
+      component: Error404Page,
     },
   ],
 });

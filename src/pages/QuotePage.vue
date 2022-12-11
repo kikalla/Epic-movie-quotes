@@ -4,9 +4,9 @@
     <div class="flex">
       <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
         <UserInfo></UserInfo>
-        <div class="flex items-center my-11 ml-3">
+        <div @click="newsRoute" class="flex items-center my-11 ml-3">
           <img src="@/assets/home.svg" alt="home" />
-          <a href="" class="text-2xl ml-11">News feed</a>
+          <a class="text-2xl ml-11">News feed</a>
         </div>
         <div @click="moviesRoute" class="flex items-center ml-3 cursor-pointer">
           <img src="@/assets/activeMovie.svg" alt="home" />
@@ -25,12 +25,19 @@
             alt="close"
           />
           <div
+            v-if="userId === quote.user_id || userId === movieUserId"
             class="absolute left-4 top-4 flex justify-between items-center w-36 h-10 px-7 py-2 rounded-lg"
           >
-            <a @click="editQuote" class="cursor-pointer"
+            <a
+              v-if="userId === quote.user_id"
+              @click="editQuote"
+              class="cursor-pointer"
               ><img src="@/assets/edit.svg" alt="edit"
             /></a>
-            <div class="h-3/4 border-[#6C757D] border"></div>
+            <div
+              v-if="userId === quote.user_id"
+              class="h-3/4 border-[#6C757D] border"
+            ></div>
             <a @click="deleteQuote" class="cursor-pointer"
               ><img src="@/assets/delete.svg" alt="delete"
             /></a>
@@ -42,8 +49,12 @@
             ></div>
           </div>
           <div class="flex items-center">
-            <img src="@/assets/default.png" alt="profile" />
-            <p class="text-xl ml-4">Nino Tabagari</p>
+            <img
+              :src="creatorImage"
+              class="w-[3.75rem] h-[3.75rem] rounded-[50%] object-cover"
+              alt="profile"
+            />
+            <p class="text-xl ml-4">{{ username }}</p>
           </div>
           <div
             class="h-12 border-[#6C757D] border rounded-md flex justify-between items-center my-5"
@@ -84,7 +95,11 @@
           <div class="overflow-scroll h-[26vh] mt-4">
             <div v-for="(comment, index) in comments" :key="index">
               <div class="flex items-center">
-                <img class="w-[3.25rem]" src="@/assets/default.png" alt="" />
+                <img
+                  class="w-[3.25rem] h-[3.25rem] rounded-[50%] object-cover"
+                  :src="usersImages[index]"
+                  alt="user-image"
+                />
                 <h2 class="text-xl ml-4">{{ usernames[index] }}</h2>
               </div>
               <div>
@@ -99,7 +114,11 @@
             <h2 class="text-2xl" v-if="!showComments">No comments yet</h2>
           </div>
           <form @submit.prevent="quoteComment" class="flex items-center">
-            <img class="w-[3.25rem]" src="@/assets/default.png" alt="" />
+            <img
+              class="w-[3.25rem] h-[3.25rem] rounded-[50%] object-cover"
+              :src="userImage"
+              alt="user-image"
+            />
             <input
               v-model="comment"
               class="bg-[#24222F] px-4 h-12 ml-3 w-11/12 rounded-lg outline-none placeholder:text-white placeholder:text-lg"
@@ -117,7 +136,7 @@
 import PageHeader from "@/components/layout/PageHeader.vue";
 import UserInfo from "@/components/layout/UserInfo.vue";
 import router from "@/router/index.js";
-import axios from "axios";
+import axiosInstance from "@/config/axios.js";
 import { ref, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/store.js";
@@ -132,9 +151,19 @@ const liked = ref(false);
 const comment = ref("");
 const comments = ref([]);
 const usernames = ref([]);
+const usersImages = ref([]);
+const userImage = ref(null);
+const creatorImage = ref(null);
+const username = ref(null);
+const userId = useAuthStore().userId;
+const movieUserId = ref(null);
 
 function moviesRoute() {
   router.push({ path: "/movies" });
+}
+
+function newsRoute() {
+  router.push({ path: "/news-feed" });
 }
 
 function editQuote() {
@@ -146,21 +175,20 @@ function close() {
 }
 
 function deleteQuote() {
-  axios
+  axiosInstance
     .post(BACK_URL + "/delete-quote", { quote_id: quoteId })
     .then(() => {
       router.push({ path: "/movies/" + quote.value.movie_id });
     })
     .catch((error) => {
-      console.log(error);
+      if (error.response.status === 403) router.push({ path: "/error-403" });
     });
 }
 
 function likeDislike() {
-  axios
+  axiosInstance
     .post(BACK_URL + "/like-dislike", {
       quote_id: quoteId,
-      user_id: useAuthStore().userId,
     })
     .then((response) => {
       if (response.status === 201) {
@@ -180,27 +208,40 @@ function quoteComment() {
   const data = {
     comment: comment.value,
     quote_id: quote.value.id,
-    user_id: useAuthStore().userId,
   };
-  axios.post(BACK_URL + "/add-comment", data).then((response) => {
-    comment.value = "";
-    quote.value.comment_number = quote.value.comment_number + 1;
-    comments.value.push(response.data[0]);
-    usernames.value.push(response.data[1]);
-    showComments.value = true;
-  });
+  if (comment.value !== "") {
+    axiosInstance.post(BACK_URL + "/add-comment", data).then((response) => {
+      comment.value = "";
+      quote.value.comment_number = quote.value.comment_number + 1;
+      comments.value.push(response.data[0]);
+      usernames.value.push(response.data[1]);
+      if (response.data[2] === "/images/default.jpg") {
+        usersImages.value.push(BACK_URL_IMAGE + response.data[2]);
+      } else {
+        usersImages.value.push(BACK_URL_IMAGE + "/storage/" + response.data[2]);
+      }
+      showComments.value = true;
+    });
+  }
 }
 
 onBeforeMount(() => {
-  axios
+  axiosInstance
     .post(BACK_URL + "/get-quote", { quote_id: quoteId })
     .then((response) => {
-      quote.value = response.data;
+      quote.value = response.data[0];
+      if (response.data[1] === "/images/default.jpg") {
+        creatorImage.value = BACK_URL_IMAGE + response.data[1];
+      } else {
+        creatorImage.value = BACK_URL_IMAGE + "/storage/" + response.data[1];
+      }
+      username.value = response.data[2];
+      movieUserId.value = response.data[3];
     })
     .catch(() => {
       router.push({ path: "/error-404" });
     });
-  axios
+  axiosInstance
     .post(BACK_URL + "/get-comments", {
       quote_id: quoteId,
     })
@@ -210,14 +251,23 @@ onBeforeMount(() => {
       if (comments.value.length !== 0) {
         showComments.value = true;
       }
+      response.data[2].forEach((image, index) => {
+        if (image === "/images/default.jpg") {
+          image = BACK_URL_IMAGE + "/images/default.jpg";
+          usersImages.value[index] = image;
+        } else {
+          usersImages.value[index] = BACK_URL_IMAGE + "/storage/" + image;
+        }
+      });
     })
-    .catch(() => {
-      router.push({ path: "/error-404" });
+    .catch((error) => {
+      console.log(error);
+
+      // router.push({ path: "/error-404" });
     });
-  axios
+  axiosInstance
     .post(BACK_URL + "/get-likes", {
       quote_id: quoteId,
-      user_id: useAuthStore().userId,
     })
     .then((response) => {
       likes.value = response.data[0];
@@ -226,5 +276,12 @@ onBeforeMount(() => {
     .catch(() => {
       router.push({ path: "/error-404" });
     });
+  axiosInstance.post(BACK_URL + "/get-user-info").then((response) => {
+    if (response.data[0] === "/images/default.jpg") {
+      userImage.value = BACK_URL_IMAGE + response.data[0];
+    } else {
+      userImage.value = BACK_URL_IMAGE + "/storage/" + response.data[0];
+    }
+  });
 });
 </script>

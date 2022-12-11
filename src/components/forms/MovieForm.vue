@@ -14,8 +14,12 @@
       <div class="border-t border-[#efefef] opacity-20 my-6 w-[108%]"></div>
     </div>
     <div class="flex items-center my-2">
-      <img src="@/assets/default.png" alt="profile" />
-      <p class="text-xl ml-4">Nino Tabagari</p>
+      <img
+        class="w-[3.75rem] h-[3.75rem] rounded-[50%] object-cover"
+        :src="userImage"
+        alt="profile"
+      />
+      <p class="text-xl ml-4">{{ username }}</p>
     </div>
     <form @submit.prevent="addMovie">
       <div
@@ -128,9 +132,8 @@
 <script setup>
 import RedButton from "@/components/ui/RedButton.vue";
 import router from "@/router/index.js";
-import axios from "axios";
-import { useAuthStore } from "@/store.js";
-import { ref } from "vue";
+import axiosInstance from "@/config/axios.js";
+import { ref, onBeforeMount } from "vue";
 
 const titleEn = ref("");
 const titleKa = ref("");
@@ -140,6 +143,9 @@ const descriptionEn = ref("");
 const descriptionKa = ref("");
 const image = ref(null);
 const BACK_URL = import.meta.env.VITE_BACK_URL;
+const BACK_URL_IMAGE = BACK_URL.replace("/api", "");
+const userImage = ref(null);
+const username = ref(null);
 
 function close() {
   router.push({ path: "/movies" });
@@ -152,7 +158,6 @@ function handleChange(e) {
 
 function addMovie() {
   const formData = new FormData();
-  formData.append("user_id", useAuthStore().userId);
   formData.append("title_en", titleEn.value);
   formData.append("title_ka", titleKa.value);
   formData.append("director_en", directorEn.value);
@@ -161,7 +166,7 @@ function addMovie() {
   formData.append("description_ka", descriptionKa.value);
   formData.append("image", image.value);
 
-  axios
+  axiosInstance
     .post(BACK_URL + "/movies/add-movie", formData)
     .then(() => {
       router.push({ path: "/movies" });
@@ -170,4 +175,19 @@ function addMovie() {
       console.log(error.response);
     });
 }
+onBeforeMount(() => {
+  axiosInstance
+    .post(BACK_URL + "/get-user-info")
+    .then((response) => {
+      if (response.data[0] === "/images/default.jpg") {
+        userImage.value = BACK_URL_IMAGE + response.data[0];
+      } else {
+        userImage.value = BACK_URL_IMAGE + "/storage/" + response.data[0];
+      }
+      username.value = response.data[1];
+    })
+    .catch(() => {
+      router.push({ path: "/error-404" });
+    });
+});
 </script>

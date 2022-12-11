@@ -14,8 +14,12 @@
       <div class="border-t border-[#efefef] opacity-20 my-6 w-[108%]"></div>
     </div>
     <div class="flex items-center my-2">
-      <img src="@/assets/default.png" alt="profile" />
-      <p class="text-xl ml-4">Nino Tabagari</p>
+      <img
+        class="w-[3.75rem] h-[3.75rem] rounded-[50%] object-cover"
+        :src="userImage"
+        alt="profile"
+      />
+      <p class="text-xl ml-4">{{ username }}</p>
     </div>
     <div v-if="movie" class="flex mt-5">
       <img
@@ -92,16 +96,16 @@
 <script setup>
 import RedButton from "@/components/ui/RedButton.vue";
 import router from "@/router/index.js";
-import axios from "axios";
-import { useAuthStore } from "@/store.js";
-import { ref } from "vue";
+import axiosInstance from "@/config/axios.js";
+import { ref, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 
 const quoteEn = ref("");
 const quoteKa = ref("");
 const movieId = useRouter().currentRoute.value.params.movieId;
 const image = ref(null);
-
+const userImage = ref(null);
+const username = ref(null);
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 const BACK_URL_IMAGE = BACK_URL.replace("/api", "");
 
@@ -118,13 +122,12 @@ function handleChange(e) {
 
 function addQuote() {
   const formData = new FormData();
-  formData.append("user_id", useAuthStore().userId);
   formData.append("quote_en", quoteEn.value);
   formData.append("quote_ka", quoteKa.value);
   formData.append("movie_id", movieId);
   formData.append("image", image.value);
 
-  axios
+  axiosInstance
     .post(BACK_URL + "/add-quote", formData)
     .then(() => {
       router.push({ path: "/movies/" + movieId });
@@ -133,4 +136,20 @@ function addQuote() {
       console.log(error);
     });
 }
+
+onBeforeMount(() => {
+  axiosInstance
+    .post(BACK_URL + "/get-user-info")
+    .then((response) => {
+      if (response.data[0] === "/images/default.jpg") {
+        userImage.value = BACK_URL_IMAGE + response.data[0];
+      } else {
+        userImage.value = BACK_URL_IMAGE + "/storage/" + response.data[0];
+      }
+      username.value = response.data[1];
+    })
+    .catch(() => {
+      router.push({ path: "/error-404" });
+    });
+});
 </script>

@@ -4,9 +4,9 @@
     <div class="flex">
       <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
         <UserInfo></UserInfo>
-        <div class="flex items-center my-11 ml-3">
+        <div @click="newsRoute" class="flex items-center my-11 ml-3">
           <img src="@/assets/home.svg" alt="home" />
-          <a href="" class="text-2xl ml-11">News feed</a>
+          <a class="text-2xl ml-11">News feed</a>
         </div>
         <div @click="moviesRoute" class="flex items-center ml-3 cursor-pointer">
           <img src="@/assets/activeMovie.svg" alt="home" />
@@ -29,6 +29,7 @@
                   {{ movie.title.en }}
                 </h2>
                 <div
+                  v-if="userId === movie.user_id"
                   class="flex justify-between items-center w-36 h-10 px-7 py-2 rounded-lg bg-[#24222F]"
                 >
                   <a @click="editMovie" class="cursor-pointer"
@@ -68,7 +69,7 @@
             :id="quote.id + 'delete'"
             v-for="(quote, index) in quotes"
             :key="index"
-            class="w-[50.625rem] h-[16.75rem] mb-10 py-6 px-8 bg-[#11101A] relative"
+            class="w-[46.5rem] h-[16.75rem] mb-10 py-6 px-8 bg-[#11101A] relative"
           >
             <img
               @click="showQuoteOptions(quote.id)"
@@ -78,20 +79,33 @@
             />
             <div
               :id="quote.id"
+              v-bind:class="[
+                userId !== quote.user_id && userId !== movie.user_id
+                  ? 'h-14 pt-4'
+                  : '',
+                userId !== quote.user_id && userId === movie.user_id
+                  ? 'h-28 pt-4'
+                  : '',
+              ]"
               class="absolute hidden w-64 h-52 pl-10 pt-9 bg-[#24222F] rounded-lg top-12 -right-48 z-10"
             >
               <div
                 @click="quoteRoute(quote.id)"
-                class="flex cursor-pointer hover:bg-red-700"
+                class="flex mb-8 cursor-pointer"
               >
                 <img class="mr-4" src="@/assets/openEye.svg" alt="eye" />
                 <p>View Quote</p>
               </div>
-              <div @click="quoteEditRoute(quote.id)" class="flex my-8">
+              <div
+                v-if="userId === quote.user_id"
+                @click="quoteEditRoute(quote.id)"
+                class="flex mb-8 cursor-pointer"
+              >
                 <img class="mr-4" src="@/assets/edit.svg" alt="eye" />
                 <p>Edit</p>
               </div>
               <div
+                v-if="userId === movie.user_id || userId === quote.user_id"
                 @click="deleteQuote(quote.id, quote.id + 'delete')"
                 class="flex cursor-pointer"
               >
@@ -138,7 +152,7 @@ import PageHeader from "@/components/layout/PageHeader.vue";
 import UserInfo from "@/components/layout/UserInfo.vue";
 import RedButton from "@/components/ui/RedButton.vue";
 import router from "@/router/index.js";
-import axios from "axios";
+import axiosInstance from "@/config/axios.js";
 import { ref, onBeforeMount, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/store.js";
@@ -151,6 +165,7 @@ const quotes = ref(null);
 const quotesLikes = ref([]);
 const userLikes = ref([]);
 const emit = defineEmits(["movie"]);
+const userId = useAuthStore().userId;
 
 watch(movie, () => {
   emit("movie", movie.value);
@@ -163,6 +178,10 @@ function showQuoteOptions(id) {
 
 function editMovie() {
   router.push({ path: "/movies/" + movieId + "/edit" });
+}
+
+function newsRoute() {
+  router.push({ path: "/news-feed" });
 }
 
 function moviesRoute() {
@@ -182,10 +201,9 @@ function addQuoteRoute() {
 }
 
 function likeDislike(quoteId, index) {
-  axios
+  axiosInstance
     .post(BACK_URL + "/like-dislike", {
       quote_id: quoteId,
-      user_id: useAuthStore().userId,
     })
     .then((response) => {
       if (response.status === 201) {
@@ -202,41 +220,40 @@ function likeDislike(quoteId, index) {
 }
 
 function deleteMovie() {
-  axios
+  axiosInstance
     .post(BACK_URL + "/delete-movie", { movie_id: movieId })
     .then(() => {
       router.push({ path: "/movies" });
     })
     .catch((error) => {
-      console.log(error);
+      if (error.response.status === 403) router.push({ path: "/error-403" });
     });
 }
 
 function deleteQuote(id, idDelete) {
-  axios
+  axiosInstance
     .post(BACK_URL + "/delete-quote", { quote_id: id })
     .then(() => {
       document.getElementById(idDelete).remove();
       movie.value.quote_number = movie.value.quote_number - 1;
     })
     .catch((error) => {
-      console.log(error);
+      if (error.response.status === 403) router.push({ path: "/error-403" });
     });
 }
 
 onBeforeMount(() => {
-  axios
+  axiosInstance
     .post(BACK_URL + "/get-movie", { movie_id: movieId })
     .then((response) => {
-      movie.value = response.data;
+      movie.value = response.data[0];
     })
     .catch(() => {
       router.push({ path: "/error-404" });
     });
-  axios
+  axiosInstance
     .post(BACK_URL + "/get-quotes", {
       movie_id: movieId,
-      user_id: useAuthStore().userId,
     })
     .then((response) => {
       quotes.value = response.data[0];

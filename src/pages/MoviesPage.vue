@@ -4,9 +4,9 @@
     <div class="flex">
       <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
         <UserInfo></UserInfo>
-        <div class="flex items-center my-11 ml-3">
+        <div @click="newsRoute" class="flex items-center my-11 ml-3">
           <img src="@/assets/home.svg" alt="home" />
-          <a href="" class="text-2xl ml-11">News feed</a>
+          <a class="text-2xl ml-11">News feed</a>
         </div>
         <div @click="moviesRoute" class="flex items-center ml-3 cursor-pointer">
           <img src="@/assets/activeMovie.svg" alt="home" />
@@ -67,9 +67,8 @@ import PageHeader from "@/components/layout/PageHeader.vue";
 import UserInfo from "@/components/layout/UserInfo.vue";
 import RedButton from "@/components/ui/RedButton.vue";
 import router from "@/router/index.js";
-import axios from "axios";
+import axiosInstance from "@/config/axios.js";
 import { ref, onBeforeMount } from "vue";
-import { useAuthStore } from "@/store.js";
 
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 const BACK_URL_IMAGE = BACK_URL.replace("/api", "");
@@ -77,6 +76,10 @@ const movies = ref({});
 
 function moviesRoute() {
   router.push({ path: "/movies" });
+}
+
+function newsRoute() {
+  router.push({ path: "/news-feed" });
 }
 
 function movieRoute(movieId) {
@@ -88,10 +91,8 @@ function addMovieRoute() {
 }
 
 onBeforeMount(() => {
-  axios
-    .post(BACK_URL + "/get-movies", { user_id: useAuthStore().userId })
-    .then((response) => {
-      movies.value = response.data;
-    });
+  axiosInstance.post(BACK_URL + "/get-movies").then((response) => {
+    movies.value = response.data;
+  });
 });
 </script>
