@@ -260,10 +260,8 @@ onBeforeMount(() => {
         }
       });
     })
-    .catch((error) => {
-      console.log(error);
-
-      // router.push({ path: "/error-404" });
+    .catch(() => {
+      router.push({ path: "/error-404" });
     });
   axiosInstance
     .post(BACK_URL + "/get-likes", {

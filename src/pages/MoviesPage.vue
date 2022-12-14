@@ -22,13 +22,16 @@
           <div class="flex">
             <div class="flex items-center w-36">
               <img class="mr-2 h-6" src="@/assets/search.png" alt="search" />
-              <input
-                class="w-4/5 h-12 bg-[#0D0B14] outline-none"
-                type="text"
-                name=""
-                id=""
-                placeholder="Search"
-              />
+              <form @submit.prevent="search">
+                <input
+                  v-model="searchValue"
+                  class="w-4/5 h-12 bg-[#0D0B14] outline-none"
+                  type="text"
+                  name=""
+                  id=""
+                  placeholder="Search"
+                />
+              </form>
             </div>
             <RedButton
               @click="addMovieRoute"
@@ -73,6 +76,7 @@ import { ref, onBeforeMount } from "vue";
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 const BACK_URL_IMAGE = BACK_URL.replace("/api", "");
 const movies = ref({});
+const searchValue = ref("");
 
 function moviesRoute() {
   router.push({ path: "/movies" });
@@ -90,6 +94,13 @@ function addMovieRoute() {
   router.push({ path: "/movies/add-movie" });
 }
 
+function search() {
+  axiosInstance
+    .post(BACK_URL + "/search-movies", { search: searchValue.value })
+    .then((response) => {
+      movies.value = response.data;
+    });
+}
 onBeforeMount(() => {
   axiosInstance.post(BACK_URL + "/get-movies").then((response) => {
     movies.value = response.data;
