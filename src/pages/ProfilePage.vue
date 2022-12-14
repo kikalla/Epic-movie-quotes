@@ -4,13 +4,18 @@
     <div class="flex">
       <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
         <UserInfo></UserInfo>
-        <div @click="newsRoute" class="flex items-center my-11 ml-3">
-          <img src="@/assets/home.svg" alt="home" />
-          <a class="text-2xl ml-11">News feed</a>
+        <div
+          @click="newsRoute"
+          class="flex items-center my-11 ml-3 cursor-pointer"
+        >
+          <img src="@/assets/home.svg" class="h-[2rem]" alt="home" />
+          <a class="text-2xl ml-11 hover:text-red-500">{{ $t("news_feed") }}</a>
         </div>
         <div @click="moviesRoute" class="flex items-center ml-3 cursor-pointer">
-          <img src="@/assets/activeMovie.svg" alt="home" />
-          <a class="text-2xl ml-11">List of movies</a>
+          <img src="@/assets/movie.svg" class="h-[2rem]" alt="home" />
+          <a class="text-2xl ml-11 hover:text-red-500">{{
+            $t("list_of_movies")
+          }}</a>
         </div>
       </div>
 
@@ -18,9 +23,11 @@
         @submit.prevent="addEmail"
         v-if="showForm"
         ref="form"
-        class="bg-[#0b0a11] w-[37.5rem] h-[25rem] px-8 py-4 rounded-xl flex flex-col absolute top-72 z-10 left-[41.25rem]"
+        class="bg-[#0b0a11] w-[37.5rem] h-[24rem] px-8 py-4 rounded-xl flex flex-col absolute top-72 z-10 left-[41.25rem]"
       >
-        <h2 class="text-2xl text-white mt-4 font-medium">Add new Email</h2>
+        <h2 class="text-2xl text-white mt-4 font-medium">
+          {{ $t("add_new_email") }}
+        </h2>
 
         <div class="flex flex-col items-center w-full">
           <div
@@ -29,19 +36,21 @@
         </div>
 
         <div class="flex flex-col">
-          <p class="text-white">New Email</p>
+          <p class="text-white">{{ $t("new_email") }}</p>
 
           <input
             v-model="newEmail"
             class="w-[33rem] h-12 pl-3 mt-1 bg-[#CED4DA] rounded-lg text-black text-xl placeholder:text-black outline-none"
             type="text"
-            placeholder="Enter new email"
+            :placeholder="$t('enter_new_email')"
           />
         </div>
         <div class="text-white text-xl mt-20 flex items-center justify-end">
-          <p>Cancel</p>
+          <p class="cursor-pointer" @click="showForm = false">
+            {{ $t("cancel") }}
+          </p>
           <button type="submit" class="py-2 px-3 ml-6 bg-[#E31221] rounded-md">
-            Add
+            {{ $t("add") }}
           </button>
         </div>
       </form>
@@ -51,16 +60,16 @@
         v-bind:class="{ 'blur-[3px]': showForm }"
         class="w-4/5 pt-6 pl-20 bg-[#0D0B14] text-white"
       >
-        <h2 class="text-2xl font-medium">My profile</h2>
+        <h2 class="text-2xl font-medium">{{ $t("my_profile") }}</h2>
         <Form @submit="editUser" ref="form">
           <div
-            class="mt-20 h-[51rem] w-[62.5rem] px-20 pt-32 bg-[#11101A] rounded-xl relative"
+            class="mt-20 h-[52rem] w-[62.5rem] px-20 pt-28 bg-[#11101A] rounded-xl relative"
           >
-            <div>
+            <div class="flex">
               <label
-                class="absolute left-[25.5rem] top-[6rem] text-xl"
+                class="w-72 m-auto text-center relative right-[1rem] bottom-4 text-xl"
                 for="image"
-                >Upload new photo
+                >{{ $t("upload_new_photo") }}
               </label>
               <input
                 class="hidden"
@@ -91,12 +100,13 @@
                 rules="min:3|max:15|low_case|required"
                 class="!inline-block"
               >
-                <p>Username</p>
+                <p>{{ $t("username") }}</p>
 
                 <input
                   :class="{
-                    'outline-4 outline-[#198754] outline-offset-0': meta.valid,
-                    'outline-4 outline-[#E31221] outline-offset-0':
+                    'outline-[0.25rem] outline-[#198754] outline-offset-0':
+                      meta.valid,
+                    'outline-[0.25rem] outline-[#E31221] outline-offset-0':
                       meta.touched && !meta.valid,
                   }"
                   id="username"
@@ -111,16 +121,16 @@
                   />
                 </div>
               </Field>
-              <div class="ml-8 mt-6 text-xl">Edit</div>
+              <div class="ml-8 mt-6 text-xl">{{ $t("edit") }}</div>
             </div>
 
             <div
               class="border-t border-[#efefef] opacity-20 mt-12 mb-8 w-[33rem]"
             ></div>
 
-            <div class="overflow-scroll h-[20vh]">
+            <div class="overflow-scroll scrollbar-hide h-[20vh]">
               <div class="flex flex-col mb-6" id="true">
-                <p>Email</p>
+                <p>{{ $t("email") }}</p>
 
                 <div class="flex items-center">
                   <div class="relative">
@@ -142,15 +152,17 @@
                     />
                   </div>
                   <div class="flex items-center ml-8 text-xl">
-                    <p v-if="primary === true">Primary Email</p>
-                    <p v-else @click="makePrimary(true)">Make this primary</p>
+                    <p v-if="primary === true">{{ $t("primary_email") }}</p>
+                    <p v-else @click="makePrimary(true)">
+                      {{ $t("make_this_primary") }}
+                    </p>
 
                     <div
                       v-if="primary !== true"
                       class="mx-3 h-6 border-[#efefef] opacity-20 border"
                     ></div>
                     <p v-if="primary !== true" @click="deleteEmail(true)">
-                      Remove
+                      {{ $t("remove") }}
                     </p>
                   </div>
                 </div>
@@ -163,7 +175,7 @@
                   class="flex flex-col mb-6"
                   :id="index"
                 >
-                  <p>Email</p>
+                  <p>{{ $t("email") }}</p>
 
                   <div class="flex items-center">
                     <div class="relative">
@@ -194,13 +206,15 @@
                       />
                     </div>
                     <div class="flex items-center ml-8 text-xl">
-                      <p v-if="primary === Number(index)">Primary Email</p>
-                      <p v-if="!verifieds[index]">Not verified</p>
+                      <p v-if="primary === Number(index)">
+                        {{ $t("primary_email") }}
+                      </p>
+                      <p v-if="!verifieds[index]">{{ $t("not_verified") }}</p>
                       <p
                         v-if="verifieds[index] && primary !== Number(index)"
                         @click="makePrimary(Number(index))"
                       >
-                        Make this primary
+                        {{ $t("make_this_primary") }}
                       </p>
 
                       <div
@@ -211,7 +225,7 @@
                         v-if="primary !== Number(index)"
                         @click="deleteEmail(index)"
                       >
-                        Remove
+                        {{ $t("remove") }}
                       </p>
                     </div>
                   </div>
@@ -222,10 +236,13 @@
               <div
                 v-if="!googleUser"
                 @click="showForm = true"
-                class="text-white text-base border-white border px-6 h-12 rounded-lg font-normal flex items-center w-48"
+                class="text-white text-base border-white border px-6 h-12 rounded-lg font-normal flex items-center w-52"
               >
-                <img class="mr-4" src="@/assets/plus.svg" alt="add email" />Add
-                new email
+                <img
+                  class="mr-4 w-6"
+                  src="@/assets/plus.svg"
+                  alt="add email"
+                />{{ $t("add_new_email") }}
               </div>
               <p v-if="!googleUser" class="text-red-600 ml-4 text-xl">
                 {{ errorMessage }}
@@ -244,18 +261,21 @@
                 rules="min:8|max:15"
                 class="!inline-block"
               >
-                <p>New Password</p>
+                <p>{{ $t("new_password") }}</p>
 
                 <input
                   :class="{
-                    'outline-4 outline-[#198754] outline-offset-0': meta.valid,
-                    'outline-4 outline-[#E31221] outline-offset-0':
+                    'outline-[0.25rem] outline-[#198754] outline-offset-0':
+                      meta.valid,
+                    'outline-[0.25rem] outline-[#E31221] outline-offset-0':
                       meta.touched && !meta.valid,
                   }"
+                  :disabled="googleUser"
                   id="password"
                   v-bind="field"
                   class="w-[33rem] h-12 pl-3 mt-1 bg-[#CED4DA] rounded-lg text-black text-xl outline-none"
                   type="password"
+                  :placeholder="$t('new_password')"
                 />
                 <div class="relative">
                   <ErrorMessage
@@ -264,7 +284,9 @@
                   />
                 </div>
               </Field>
-              <div class="ml-8 mt-6 text-xl">Edit</div>
+              <div class="ml-8 mt-6 text-xl">
+                {{ $t("edit") }}
+              </div>
             </div>
             <div class="flex items-center">
               <Field
@@ -275,18 +297,21 @@
                 class="!inline-block"
                 :value="null"
               >
-                <p>Confirm Password</p>
+                <p>{{ $t("confirm_password") }}</p>
 
                 <input
+                  :disabled="googleUser"
                   :class="{
-                    'outline-4 outline-[#198754] outline-offset-0': meta.valid,
-                    'outline-4 outline-[#E31221] outline-offset-0':
+                    'outline-[0.25rem] outline-[#198754] outline-offset-0':
+                      meta.valid,
+                    'outline-[0.25rem] outline-[#E31221] outline-offset-0':
                       meta.touched && !meta.valid,
                   }"
                   id="confirm"
                   v-bind="field"
                   class="w-[33rem] h-12 pl-3 mt-1 bg-[#CED4DA] rounded-lg text-black text-xl outline-none"
                   type="password"
+                  :placeholder="$t('password')"
                 />
                 <div class="relative">
                   <ErrorMessage
@@ -295,11 +320,11 @@
                   />
                 </div>
               </Field>
-              <div class="ml-8 mt-6 text-xl">Edit</div>
+              <div class="ml-8 mt-6 text-xl">{{ $t("edit") }}</div>
               <RedButton
                 type="submit"
                 class="text-base p-2 rounded-md mt-6 ml-32"
-                >Save Changes</RedButton
+                >{{ $t("save_changes") }}</RedButton
               >
             </div>
           </div>

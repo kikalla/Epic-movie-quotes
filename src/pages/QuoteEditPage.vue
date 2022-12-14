@@ -4,13 +4,18 @@
     <div class="flex">
       <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
         <UserInfo></UserInfo>
-        <div @click="newsRoute" class="flex items-center my-11 ml-3">
-          <img src="@/assets/home.svg" alt="home" />
-          <a class="text-2xl ml-11">News feed</a>
+        <div
+          @click="newsRoute"
+          class="flex items-center my-11 ml-3 cursor-pointer"
+        >
+          <img src="@/assets/home.svg" class="h-[2rem]" alt="home" />
+          <a class="text-2xl ml-11 hover:text-red-500">{{ $t("news_feed") }}</a>
         </div>
         <div @click="moviesRoute" class="flex items-center ml-3 cursor-pointer">
-          <img src="@/assets/activeMovie.svg" alt="home" />
-          <a class="text-2xl ml-11">List of movies</a>
+          <img src="@/assets/activeMovie.svg" class="h-[2rem]" alt="home" />
+          <a class="text-2xl ml-11 hover:text-red-500">{{
+            $t("list_of_movies")
+          }}</a>
         </div>
       </div>
 

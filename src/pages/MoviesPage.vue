@@ -4,20 +4,27 @@
     <div class="flex">
       <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
         <UserInfo></UserInfo>
-        <div @click="newsRoute" class="flex items-center my-11 ml-3">
-          <img src="@/assets/home.svg" alt="home" />
-          <a class="text-2xl ml-11">News feed</a>
+        <div
+          @click="newsRoute"
+          class="flex items-center my-11 ml-3 cursor-pointer"
+        >
+          <img src="@/assets/home.svg" class="h-[2rem]" alt="home" />
+          <a class="text-2xl ml-11 hover:text-red-500">{{ $t("news_feed") }}</a>
         </div>
         <div @click="moviesRoute" class="flex items-center ml-3 cursor-pointer">
-          <img src="@/assets/activeMovie.svg" alt="home" />
-          <a class="text-2xl ml-11">List of movies</a>
+          <img src="@/assets/activeMovie.svg" class="h-[2rem]" alt="home" />
+          <a class="text-2xl ml-11 hover:text-red-500">{{
+            $t("list_of_movies")
+          }}</a>
         </div>
       </div>
 
       <div class="w-4/5 pt-8 px-20 bg-[#0D0B14] text-white">
         <div class="flex justify-between items-center mb-16">
           <h2 class="text-2xl font-medium">
-            My list of movies (Total {{ movies.length }})
+            {{ $t("my_list_of_movies") + " " + $t("total") }} ({{
+              movies.length
+            }})
           </h2>
           <div class="flex">
             <div class="flex items-center w-36">
@@ -29,7 +36,7 @@
                   type="text"
                   name=""
                   id=""
-                  placeholder="Search"
+                  :placeholder="$t('search')"
                 />
               </form>
             </div>
@@ -37,13 +44,15 @@
               @click="addMovieRoute"
               class="flex items-center h-12 rounded-md p-4"
             >
-              <img class="mr-2" src="@/assets/plus.svg" alt="plus" />Add movie
+              <img class="mr-2 w-6" src="@/assets/plus.svg" alt="plus" />{{
+                $t("add_movie")
+              }}
             </RedButton>
           </div>
         </div>
 
         <div
-          class="grid grid-cols-3 grid-rows-[repeat(auto-fit_,50%)] gap-14 h-[75vh] overflow-scroll"
+          class="grid grid-cols-3 grid-rows-[repeat(auto-fit_,50%)] gap-14 h-[75vh] overflow-scroll scrollbar-hide"
         >
           <div v-for="movie in movies" :key="movie.image">
             <a @click="movieRoute(movie.id)" class="cursor-pointer">
@@ -52,10 +61,10 @@
                 :src="BACK_URL_IMAGE + '/storage/' + movie.image"
                 alt="movie"
               />
-              <h2 class="text-2xl mt-4">{{ movie.title.en }}</h2>
+              <h2 class="text-2xl mt-4">{{ movie.title[$i18n.locale] }}</h2>
               <div class="flex items-center mt-4">
                 <p class="mr-3">{{ movie.quote_number }}</p>
-                <img src="@/assets/quote.svg" alt="quote" />
+                <img src="@/assets/quote.svg" class="w-[2rem]" alt="quote" />
               </div>
             </a>
           </div>

@@ -17,7 +17,7 @@
         /></a>
       </div>
       <div class="flex flex-col items-center mt-4">
-        <h2 class="text-2xl font-medium">View Quote</h2>
+        <h2 class="text-2xl font-medium">{{ $t("view_quote") }}</h2>
         <div class="border-t border-[#efefef] opacity-20 my-6 w-[108%]"></div>
       </div>
       <div class="flex items-center">
@@ -60,7 +60,9 @@
           <label
             class="bg-[#11101A] p-4 rounded-lg opacity-80 absolute top-[35%] left-[40%] z-10 flex flex-col justify-center items-center"
             for="image"
-            ><img class="w-1/4" src="@/assets/camera.svg" alt="" /> Change photo
+            ><img class="w-1/4" src="@/assets/camera.svg" alt="" />{{
+              $t("change_photo")
+            }}
           </label>
           <input
             @change="handleChange"
@@ -86,7 +88,7 @@
         </div>
 
         <RedButton class="py-2 rounded-md text-xl w-full">
-          Edit quote
+          {{ $t("edit_quote") }}
         </RedButton>
       </form>
     </div>

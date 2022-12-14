@@ -7,7 +7,7 @@
     />
     <div class="ml-6">
       <h2 class="text-2xl">{{ username }}</h2>
-      <a class="text-[#CED4DA]">Edit your profile</a>
+      <a class="text-[#CED4DA]">{{ $t("edit_your_profile") }}</a>
     </div>
   </div>
 </template>

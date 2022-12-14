@@ -12,7 +12,7 @@
     />
 
     <div class="flex flex-col items-center mt-8">
-      <h2 class="text-2xl font-medium">Write New Quote</h2>
+      <h2 class="text-2xl font-medium">{{ $t("write_new_quote") }}</h2>
       <div class="border-t border-[#efefef] opacity-20 my-6 w-[108%]"></div>
     </div>
 
@@ -47,12 +47,12 @@
       <div
         class="border-[#6C757D] border rounded-lg flex items-center h-[5.5rem] mb-6"
       >
-        <img class="mx-4" src="@/assets/camera.svg" alt="camera" />
-        <p class="text-xl">Drag & drop your image here or</p>
+        <img class="mx-4 w-[2rem]" src="@/assets/camera.svg" alt="camera" />
+        <p class="text-xl">{{ $t("drag_drop_your_image_here_or") }}</p>
         <label
           class="bg-[#9747FF66] cursor-pointer text-xl p-2 ml-2 z-10"
           for="image"
-          >Choose file
+          >{{ $t("choose_file") }}
         </label>
 
         <input
@@ -71,7 +71,7 @@
         >
           <div class="flex items-center">
             <img class="w-8 h-8 mx-6" src="@/assets/movie.svg" alt="movie" />
-            <p class="text-2xl">Choose movie</p>
+            <p class="text-2xl">{{ $t("choose_movie") }}</p>
             <input
               class="bg-transparent outline-none h-[1px] w-[1px]"
               required
@@ -79,11 +79,15 @@
               v-model="movieId"
             />
           </div>
-          <img class="mr-6" src="@/assets/downArrow.svg" alt="arrow" />
+          <img
+            class="mr-6 w-[1.3rem]"
+            src="@/assets/downArrow.svg"
+            alt="arrow"
+          />
         </div>
         <div
           v-if="showMovies"
-          class="absolute overflow-scroll top-28 bg-black w-full h-[15rem] rounded-md"
+          class="absolute overflow-scroll scrollbar-hide top-28 bg-black w-full h-[15rem] rounded-md"
         >
           <div
             v-for="movie in usersMovies"
@@ -97,8 +101,10 @@
                 alt=""
               />
               <div class="flex flex-col">
-                <p class="text-2xl mb-4">{{ movie.title.en }}</p>
-                <p class="text-2xl">director: {{ movie.director.en }}</p>
+                <p class="text-2xl mb-4">{{ movie.title[$i18n.locale] }}</p>
+                <p class="text-2xl">
+                  {{ $t("director") }}: {{ movie.director[$i18n.locale] }}
+                </p>
               </div>
             </div>
             <div class="border-t border-[#efefef] opacity-20 my-3 w-full"></div>
@@ -106,7 +112,9 @@
         </div>
       </div>
 
-      <RedButton class="py-2 rounded-md text-xl w-full">Post</RedButton>
+      <RedButton class="py-2 rounded-md text-xl w-full">{{
+        $t("post")
+      }}</RedButton>
     </form>
   </div>
   <div
@@ -116,13 +124,18 @@
     <div class="flex">
       <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
         <UserInfo></UserInfo>
-        <div @click="newsRoute" class="flex items-center my-11 ml-3">
-          <img src="@/assets/home.svg" alt="home" />
-          <a class="text-2xl ml-11">News feed</a>
+        <div
+          @click="newsRoute"
+          class="flex items-center my-11 ml-3 cursor-pointer"
+        >
+          <img src="@/assets/activeHome.svg" class="h-[2rem]" alt="home" />
+          <a class="text-2xl ml-11 hover:text-red-500">{{ $t("news_feed") }}</a>
         </div>
         <div @click="moviesRoute" class="flex items-center ml-3 cursor-pointer">
-          <img src="@/assets/activeMovie.svg" alt="home" />
-          <a class="text-2xl ml-11">List of movies</a>
+          <img src="@/assets/movie.svg" class="h-[2rem]" alt="home" />
+          <a class="text-2xl ml-11 hover:text-red-500">{{
+            $t("list_of_movies")
+          }}</a>
         </div>
       </div>
 
@@ -139,7 +152,7 @@
               alt=""
             />
             <p @mousedown="showQuoteForm = true" class="ml-2 text-xl">
-              Write new quote
+              {{ $t("write_new_quote") }}
             </p>
           </div>
           <div id="searchDiv" class="flex items-center h-[3.25rem] w-40 ml-6">
@@ -152,12 +165,16 @@
                 id="searchInput"
                 class="h-[3.25rem] bg-transparent text-xl outline-none w-full"
                 type="text"
-                placeholder="Search by"
+                :placeholder="$t('search')"
               />
             </form>
           </div>
         </div>
-        <div class="overflow-scroll h-[81vh] mt-4" v-if="show" id="quotes">
+        <div
+          class="overflow-scroll scrollbar-hide h-[81vh] mt-4"
+          v-if="show"
+          id="quotes"
+        >
           <div
             v-for="(quote, index) in quotes"
             :key="quote"
@@ -177,7 +194,7 @@
               </div>
               <div class="h-12 flex justify-between items-center my-5">
                 <p class="bg-[#11101A] ml-2 w-11/12 text-xl">
-                  "{{ quote.quote.en }}"-{{ quote.movieTitle }}
+                  "{{ quote.quote[$i18n.locale] }}"-{{ quote.movieTitle }}
                 </p>
               </div>
 
@@ -189,7 +206,11 @@
               <div class="flex items-center mt-3">
                 <div class="flex items-center mr-8">
                   <p class="text-xl mr-3">{{ quote.comment_number }}</p>
-                  <img src="@/assets/comment.svg" alt="comment" />
+                  <img
+                    src="@/assets/comment.svg"
+                    class="w-[2rem]"
+                    alt="comment"
+                  />
                 </div>
                 <div
                   @click="likeDislike(quote.id, index)"
@@ -199,12 +220,18 @@
                   <img
                     v-if="quote.liked"
                     src="@/assets/activeLike.svg"
+                    class="w-[2rem]"
                     alt="like"
                   />
-                  <img v-else src="@/assets/like.svg" alt="like" />
+                  <img
+                    v-else
+                    src="@/assets/like.svg"
+                    class="w-[2rem]"
+                    alt="like"
+                  />
                 </div>
               </div>
-              <div class="overflow-scroll h-[26vh] mt-4">
+              <div class="overflow-scroll scrollbar-hide h-[26vh] mt-4">
                 <div v-for="(comment, index) in quote.comments" :key="index">
                   <div class="flex items-center">
                     <img
@@ -222,7 +249,7 @@
                   </div>
                 </div>
                 <h2 class="text-2xl" v-if="!quote.showComments">
-                  No comments yet
+                  {{ $t("no_comments_yet") }}
                 </h2>
               </div>
               <form
@@ -239,13 +266,13 @@
                   @input="comment = $event.target.value"
                   class="bg-[#24222F] px-4 h-12 ml-3 w-11/12 rounded-lg outline-none placeholder:text-white placeholder:text-lg"
                   type="text"
-                  placeholder="Write a comment"
+                  :placeholder="$t('write_comeent')"
                 />
               </form>
             </div>
           </div>
         </div>
-        <div class="overflow-scroll h-[81vh] mt-4" v-if="!show">
+        <div class="overflow-scroll scrollbar-hide h-[81vh] mt-4" v-if="!show">
           <div
             v-for="(movie, index) in movies"
             :key="index"
@@ -263,10 +290,10 @@
                 <p class="text-xl ml-4">{{ movieCreatorsUsernames[index] }}</p>
               </div>
               <p class="bg-[#11101A] ml-2 my-4 text-xl">
-                {{ movie.title.en }}
+                {{ movie.title[$i18n.locale] }}
               </p>
               <p class="bg-[#11101A] ml-2 text-xl">
-                Director: {{ movie.director.en }}
+                Director: {{ movie.director[$i18n.locale] }}
               </p>
               <img
                 @click="seeMovie(movie.id)"
@@ -274,9 +301,9 @@
                 :src="BACK_URL_IMAGE + '/storage/' + movie.image"
                 alt=""
               />
-              <div class="flex items-center mt-4">
+              <div class="flex items-center mt-6">
                 <p class="text-2xl mx-4">{{ movie.quote_number }}</p>
-                <img class="w-10 h-10" src="@/assets/quote.svg" alt="" />
+                <img class="w-[2.2rem]" src="@/assets/quote.svg" alt="" />
               </div>
             </div>
           </div>

@@ -10,7 +10,7 @@
     />
 
     <div class="flex flex-col items-center mt-8">
-      <h2 class="text-2xl font-medium">Edit Movie</h2>
+      <h2 class="text-2xl font-medium">{{ $t("edit_movie") }}</h2>
       <div class="border-t border-[#efefef] opacity-20 my-6 w-[108%]"></div>
     </div>
     <div class="flex items-center my-2">
@@ -107,12 +107,12 @@
       <div
         class="border-[#6C757D] border rounded-lg flex items-center h-[5.5rem] mb-5"
       >
-        <img class="mx-4" src="@/assets/camera.svg" alt="camera" />
-        <p class="text-xl">Drag & drop your image here or</p>
+        <img class="mx-4 w-[2rem]" src="@/assets/camera.svg" alt="camera" />
+        <p class="text-xl">{{ $t("drag_drop_your_image_here_or") }}</p>
         <label
           class="bg-[#9747FF66] cursor-pointer text-xl p-2 ml-2 z-10"
           for="image"
-          >Choose file
+          >{{ $t("choose_file") }}
         </label>
 
         <input
@@ -123,7 +123,9 @@
           type="file"
         />
       </div>
-      <RedButton class="py-2 rounded-md text-xl w-full"> Edit movie </RedButton>
+      <RedButton class="py-2 rounded-md text-xl w-full">
+        {{ $t("edit_movie") }}
+      </RedButton>
     </form>
   </div>
 </template>

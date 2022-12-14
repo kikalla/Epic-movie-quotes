@@ -10,7 +10,7 @@
     />
 
     <div class="flex flex-col items-center mt-8">
-      <h2 class="text-2xl font-medium">Add Movie</h2>
+      <h2 class="text-2xl font-medium">{{ $t("add_movie") }}</h2>
       <div class="border-t border-[#efefef] opacity-20 my-6 w-[108%]"></div>
     </div>
     <div class="flex items-center my-2">
@@ -28,7 +28,7 @@
         <input
           v-model="titleEn"
           required
-          class="bg-[#11101A] h-12 outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg"
+          class="bg-[#11101A] h-12 outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg autofill:bg-yellow-200"
           type="text"
           name="title-en"
           placeholder="Movie Name"
@@ -107,12 +107,12 @@
       <div
         class="border-[#6C757D] border rounded-lg flex items-center h-[5.5rem] mb-5"
       >
-        <img class="mx-4" src="@/assets/camera.svg" alt="camera" />
-        <p class="text-xl">Drag & drop your image here or</p>
+        <img class="mx-4 w-[2rem]" src="@/assets/camera.svg" alt="camera" />
+        <p class="text-xl">{{ $t("drag_drop_your_image_here_or") }}</p>
         <label
           class="bg-[#9747FF66] cursor-pointer text-xl p-2 ml-2 z-10"
           for="image"
-          >Choose file
+          >{{ $t("choose_file") }}
         </label>
 
         <input
@@ -124,7 +124,9 @@
           type="file"
         />
       </div>
-      <RedButton class="py-2 rounded-md text-xl w-full"> Add movie </RedButton>
+      <RedButton class="py-2 rounded-md text-xl w-full"
+        >{{ $t("add_movie") }}
+      </RedButton>
     </form>
   </div>
 </template>
