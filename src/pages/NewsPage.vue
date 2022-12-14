@@ -129,7 +129,6 @@
       <div class="w-4/5 pt-8 px-20 bg-[#0D0B14] text-white">
         <div class="flex items-center">
           <div
-            @mousedown="observee"
             id="addQuote"
             class="flex items-center w-[49rem] h-[3.25rem] bg-[#24222F] rounded-lg"
           >
@@ -293,7 +292,7 @@ import RedButton from "@/components/ui/RedButton.vue";
 import UserInfo from "@/components/layout/UserInfo.vue";
 import router from "@/router/index.js";
 import axiosInstance from "@/config/axios.js";
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, onMounted } from "vue";
 
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 const BACK_URL_IMAGE = BACK_URL.replace("/api", "");
@@ -312,7 +311,7 @@ const usersMovies = ref([]);
 const movieId = ref(null);
 const image = ref(null);
 const showQuoteForm = ref(false);
-const page = ref(0);
+const page = ref(1);
 const maxPage = ref(null);
 
 function moviesRoute() {
@@ -384,19 +383,22 @@ function likeDislike(id, index) {
 }
 
 function search() {
+  quotes.value = [];
+  movies.value = [];
   if (inputSearch.value === "") {
-    quotes.value = [];
-    page.value = 0;
-    getQuotes();
-    observee();
+    show.value = true;
+    page.value = 1;
+    getQuotes(page.value);
+    page.value++;
+    setTimeout(() => {
+      displayQuotesOnScroll();
+    }, 100);
   } else {
     axiosInstance
       .post(BACK_URL + "/search", {
         search: inputSearch.value,
       })
       .then((response) => {
-        quotes.value = [];
-
         if (inputSearch.value.startsWith("@")) {
           show.value = false;
           movies.value = response.data[0];
@@ -409,11 +411,9 @@ function search() {
             }
           });
           movieCreatorsUsernames.value = response.data[2];
-          quotes.value = [];
         }
         if (inputSearch.value.startsWith("#")) {
-          movies.value = [];
-          show.value = true;
+          show.value = false;
           response.data[0].forEach((quote, index) => {
             if (response.data[2][index] === "/images/default.jpg") {
               quote["creatorImage"] = BACK_URL_IMAGE + response.data[2][index];
@@ -437,8 +437,10 @@ function search() {
             });
             quote["usersImages"] = usersImages;
             quote["showComments"] = response.data[9][index];
-            console.log(quotes);
             quotes.value.push(quote);
+            setTimeout(() => {
+              show.value = true;
+            }, 100);
           });
         }
       })
@@ -475,9 +477,6 @@ function quoteComment(quoteId, quoteIndex, comment) {
 }
 
 function getQuotes(pageId) {
-  show.value = true;
-  movies.value = [];
-
   axiosInstance
     .post(BACK_URL + "/news-feed-quotes?page=" + pageId)
     .then((response) => {
@@ -513,43 +512,28 @@ function getQuotes(pageId) {
     });
 }
 
-const observer = new IntersectionObserver(
-  async function (entries) {
-    const ent = entries[0];
-
-    if (ent.isIntersecting) {
-      getQuotes(page.value + 2);
-      console.log("loaded");
-      page.value++;
-      observer.unobserve(ent.target);
+function displayQuotesOnScroll() {
+  const element = ref(document.getElementById("quotes"));
+  element.value.scrollHeight - element.value.scrollTop ===
+    element.value.clientHeight;
+  element.value.addEventListener("scroll", function (event) {
+    var element = event.target;
+    if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+      if (page.value <= maxPage.value) {
+        getQuotes(page.value);
+        page.value++;
+      }
     }
-
-    if (page.value <= maxPage.value && ent.isIntersecting) {
-      // const element = ref(document.getElementById("quotes").lastElementChild);
-      // console.log(document.getElementById("quotes"), element.value);
-      // observer.observe(element.value);
-      // console.log("new observer", maxPage.value);
-      console.log(
-        document.getElementById("quotes").lastElementChild,
-        document.getElementById("quotes")
-      );
-
-      observee();
-    }
-  },
-  {
-    root: null,
-    threshold: 0,
-    rootMargin: "0px",
-  }
-);
-
-function observee() {
-  observer.observe(document.getElementById("quotes").lastElementChild);
+  });
 }
 
+onMounted(() => {
+  displayQuotesOnScroll();
+});
+
 onBeforeMount(() => {
-  getQuotes();
+  getQuotes(page.value);
+  page.value++;
   axiosInstance.post(BACK_URL + "/get-user-info").then((response) => {
     if (response.data[0] === "/images/default.jpg") {
       userImage.value = BACK_URL_IMAGE + response.data[0];
