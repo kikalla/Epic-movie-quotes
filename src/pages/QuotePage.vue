@@ -280,10 +280,8 @@ onBeforeMount(() => {
         }
       });
     })
-    .catch((error) => {
-      if (error.response.status === 404) {
-        router.push({ path: "/error-404" });
-      }
+    .catch(() => {
+      router.push({ path: "/error-404" });
     });
   axiosInstance
     .post(BACK_URL + "/get-likes", {
@@ -293,10 +291,8 @@ onBeforeMount(() => {
       likes.value = response.data[0];
       liked.value = response.data[1];
     })
-    .catch((error) => {
-      if (error.response.status === 404) {
-        router.push({ path: "/error-404" });
-      }
+    .catch(() => {
+      router.push({ path: "/error-404" });
     });
   axiosInstance.post(BACK_URL + "/get-user-info").then((response) => {
     if (response.data[0] === "/images/default.jpg") {

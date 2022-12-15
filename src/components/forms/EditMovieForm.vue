@@ -200,10 +200,8 @@ onBeforeMount(() => {
       }
       username.value = response.data[2];
     })
-    .catch((error) => {
-      if (error.response.status === 404) {
-        router.push({ path: "/error-404" });
-      }
+    .catch(() => {
+      router.push({ path: "/error-404" });
     });
 });
 </script>

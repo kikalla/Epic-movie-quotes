@@ -116,10 +116,8 @@ onBeforeMount(() => {
     .then((response) => {
       movies.value = response.data;
     })
-    .catch((error) => {
-      if (error.response.status === 404) {
-        router.push({ path: "/error-404" });
-      }
+    .catch(() => {
+      router.push({ path: "/error-404" });
     });
 });
 </script>

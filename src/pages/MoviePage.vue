@@ -284,10 +284,8 @@ onBeforeMount(() => {
     .then((response) => {
       movie.value = response.data[0];
     })
-    .catch((error) => {
-      if (error.response.status === 404) {
-        router.push({ path: "/error-404" });
-      }
+    .catch(() => {
+      router.push({ path: "/error-404" });
     });
   axiosInstance
     .post(BACK_URL + "/get-quotes", {
@@ -298,10 +296,8 @@ onBeforeMount(() => {
       quotesLikes.value = response.data[1];
       userLikes.value = response.data[2];
     })
-    .catch((error) => {
-      if (error.response.status === 404) {
-        router.push({ path: "/error-404" });
-      }
+    .catch(() => {
+      router.push({ path: "/error-404" });
     });
 });
 </script>

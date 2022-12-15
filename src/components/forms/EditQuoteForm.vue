@@ -165,10 +165,8 @@ onBeforeMount(() => {
         userImage.value = BACK_URL_IMAGE + "/storage/" + response.data[1];
       }
     })
-    .catch((error) => {
-      if (error.response.status === 404) {
-        router.push({ path: "/error-404" });
-      }
+    .catch(() => {
+      router.push({ path: "/error-404" });
     });
 });
 </script>
