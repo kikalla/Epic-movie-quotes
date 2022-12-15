@@ -2,15 +2,21 @@
   <Form
     ref="form"
     @submit="resetPassword()"
-    class="bg-[#222030] w-[37.5rem] h-[31rem] px-28 rounded-xl flex flex-col justify-center items-center absolute top-40 left-[41.25rem]"
+    class="bg-[#222030] w-[37.5rem] h-[31rem] px-28 rounded-xl flex flex-col justify-center items-center absolute top-40 left-[35%]"
   >
-    <h2 class="text-white text-[2rem]">Create new password</h2>
+    <h2 class="text-white text-center text-[2rem]">
+      {{ $t("create_new_password") }}
+    </h2>
     <p class="text-[#6C757D] text-base text-center mb-4">
-      Your new password must be different from previous used passwords
+      {{
+        $t("your_new_password_must_be_different_from_previous_used_passwords")
+      }}
     </p>
     <div class="w-[22.5rem]">
       <div class="flex flex-col">
-        <label for="password" class="mb-2 text-white text-base">Password</label>
+        <label for="password" class="mb-2 text-white text-base">{{
+          $t("password")
+        }}</label>
         <div class="bg-[#CED4DA] rounded-md mb-7 flex relative">
           <Field
             v-slot="{ meta, field }"
@@ -21,12 +27,13 @@
             <input
               id="password"
               type="password"
-              class="bg-[#CED4DA] rounded-md h-10 p-3 outline-none w-full focus:outline-gray-500 focus:outline-4 outline-offset-0"
+              class="bg-[#CED4DA] rounded-md h-10 p-3 outline-none w-full focus:outline-gray-500 focus:outline-[0.25rem] outline-offset-0"
               v-bind="field"
-              placeholder="At least 8 & max.15 lower case characters"
+              :placeholder="$t('at_least_8_max_15_lower_case_characters')"
               :class="{
-                'outline-4 outline-[#198754] outline-offset-0': meta.valid,
-                'outline-4 outline-[#E31221] outline-offset-0':
+                'outline-[0.25rem] outline-[#198754] outline-offset-0':
+                  meta.valid,
+                'outline-[0.25rem] outline-[#E31221] outline-offset-0':
                   meta.touched && !meta.valid,
               }"
             />
@@ -41,13 +48,13 @@
         <div class="relative">
           <ErrorMessage
             name="password"
-            class="text-red-600 text-sm absolute bottom-1.5"
+            class="text-red-600 text-sm absolute bottom-0.5"
           />
         </div>
       </div>
       <div class="flex flex-col">
         <label for="confirm" class="mb-2 text-white text-base"
-          >Confirm Password
+          >{{ $t("confirm_password") }}
         </label>
         <div class="bg-[#CED4DA] rounded-md mb-10 flex relative">
           <Field
@@ -59,12 +66,13 @@
             <input
               id="confirm"
               type="password"
-              class="bg-[#CED4DA] rounded-md h-10 p-3 outline-none w-full focus:outline-gray-500 focus:outline-4 outline-offset-0"
+              class="bg-[#CED4DA] rounded-md h-10 p-3 outline-none w-full focus:outline-gray-500 focus:outline-[0.25rem] outline-offset-0"
               v-bind="field"
-              placeholder="At least 8 & max.15 lower case characters"
+              :placeholder="$t('confirm_password')"
               :class="{
-                'outline-4 outline-[#198754] outline-offset-0': meta.valid,
-                'outline-4 outline-[#E31221] outline-offset-0':
+                'outline-[0.25rem] outline-[#198754] outline-offset-0':
+                  meta.valid,
+                'outline-[0.25rem] outline-[#E31221] outline-offset-0':
                   meta.touched && !meta.valid,
               }"
             />
@@ -83,15 +91,15 @@
           />
         </div>
         <div v-if="invalid" class="relative w-28 m-auto">
-          <p name="password" class="text-red-600 text-sm absolute bottom-0">
-            Invalid token
+          <p name="password" class="text-red-600 text-sm absolute bottom-0.5">
+            {{ $t("invalid_token") }}
           </p>
         </div>
       </div>
 
-      <RedButton type="submit" class="w-full text-base p-2 rounded-md mt-2"
-        >Reset password</RedButton
-      >
+      <RedButton type="submit" class="w-full text-base p-2 rounded-md mt-2">{{
+        $t("reset_password")
+      }}</RedButton>
     </div>
   </Form>
 </template>

@@ -5,12 +5,14 @@
       <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
         <UserInfo></UserInfo>
         <div @click="newsRoute" class="flex items-center my-11 ml-3">
-          <img src="@/assets/home.svg" alt="home" />
-          <a class="text-2xl ml-11">News feed</a>
+          <img src="@/assets/home.svg" class="h-[2rem]" alt="home" />
+          <a class="text-2xl ml-11 hover:text-red-500">{{ $t("news_feed") }}</a>
         </div>
         <div @click="moviesRoute" class="flex items-center ml-3 cursor-pointer">
-          <img src="@/assets/activeMovie.svg" alt="home" />
-          <a class="text-2xl ml-11">List of movies</a>
+          <img src="@/assets/activeMovie.svg" class="h-[2rem]" alt="home" />
+          <a class="text-2xl ml-11 hover:text-red-500">{{
+            $t("list_of_movies")
+          }}</a>
         </div>
       </div>
 
@@ -32,18 +34,18 @@
               v-if="userId === quote.user_id"
               @click="editQuote"
               class="cursor-pointer"
-              ><img src="@/assets/edit.svg" alt="edit"
+              ><img src="@/assets/edit.svg" class="w-[1.3rem]" alt="edit"
             /></a>
             <div
               v-if="userId === quote.user_id"
               class="h-3/4 border-[#6C757D] border"
             ></div>
             <a @click="deleteQuote" class="cursor-pointer"
-              ><img src="@/assets/delete.svg" alt="delete"
+              ><img src="@/assets/delete.svg" class="w-[1.3rem]" alt="delete"
             /></a>
           </div>
           <div class="flex flex-col items-center mt-4">
-            <h2 class="text-2xl font-medium">View Quote</h2>
+            <h2 class="text-2xl font-medium">{{ $t("view_quote") }}</h2>
             <div
               class="border-t border-[#efefef] opacity-20 my-6 w-[108%]"
             ></div>
@@ -81,18 +83,23 @@
           <div class="flex items-center mt-3">
             <div class="flex items-center mr-8">
               <p class="text-xl mr-3">{{ quote.comment_number }}</p>
-              <img src="@/assets/comment.svg" alt="comment" />
+              <img src="@/assets/comment.svg" class="w-[2rem]" alt="comment" />
             </div>
             <div
               @click="likeDislike"
               class="flex items-center mr-8 cursor-pointer"
             >
               <p class="text-xl mr-3">{{ likes }}</p>
-              <img v-if="liked" src="@/assets/activeLike.svg" alt="like" />
-              <img v-else src="@/assets/like.svg" alt="like" />
+              <img
+                v-if="liked"
+                src="@/assets/activeLike.svg"
+                class="w-[2rem]"
+                alt="like"
+              />
+              <img v-else src="@/assets/like.svg" class="w-[2rem]" alt="like" />
             </div>
           </div>
-          <div class="overflow-scroll h-[26vh] mt-4">
+          <div class="overflow-scroll scrollbar-hide h-[26vh] mt-4">
             <div v-for="(comment, index) in comments" :key="index">
               <div class="flex items-center">
                 <img
@@ -111,7 +118,9 @@
                 ></div>
               </div>
             </div>
-            <h2 class="text-2xl" v-if="!showComments">No comments yet</h2>
+            <h2 class="text-2xl" v-if="!showComments">
+              {{ $t("no_comments_yet") }}
+            </h2>
           </div>
           <form @submit.prevent="quoteComment" class="flex items-center">
             <img
@@ -123,7 +132,7 @@
               v-model="comment"
               class="bg-[#24222F] px-4 h-12 ml-3 w-11/12 rounded-lg outline-none placeholder:text-white placeholder:text-lg"
               type="text"
-              placeholder="Write a comment"
+              :placeholder="$t('write_comeent')"
             />
           </form>
         </div>
@@ -181,7 +190,9 @@ function deleteQuote() {
       router.push({ path: "/movies/" + quote.value.movie_id });
     })
     .catch((error) => {
-      if (error.response.status === 403) router.push({ path: "/error-403" });
+      if (error.response.status === 403) {
+        router.push({ path: "/error-403" });
+      }
     });
 }
 
@@ -210,18 +221,27 @@ function quoteComment() {
     quote_id: quote.value.id,
   };
   if (comment.value !== "") {
-    axiosInstance.post(BACK_URL + "/add-comment", data).then((response) => {
-      comment.value = "";
-      quote.value.comment_number = quote.value.comment_number + 1;
-      comments.value.push(response.data[0]);
-      usernames.value.push(response.data[1]);
-      if (response.data[2] === "/images/default.jpg") {
-        usersImages.value.push(BACK_URL_IMAGE + response.data[2]);
-      } else {
-        usersImages.value.push(BACK_URL_IMAGE + "/storage/" + response.data[2]);
-      }
-      showComments.value = true;
-    });
+    axiosInstance
+      .post(BACK_URL + "/add-comment", data)
+      .then((response) => {
+        comment.value = "";
+        quote.value.comment_number = quote.value.comment_number + 1;
+        comments.value.push(response.data[0]);
+        usernames.value.push(response.data[1]);
+        if (response.data[2] === "/images/default.jpg") {
+          usersImages.value.push(BACK_URL_IMAGE + response.data[2]);
+        } else {
+          usersImages.value.push(
+            BACK_URL_IMAGE + "/storage/" + response.data[2]
+          );
+        }
+        showComments.value = true;
+      })
+      .catch((error) => {
+        if (error.response.status === 422) {
+          console.log("Unprocessable Entity: " + error.response);
+        }
+      });
   }
 }
 

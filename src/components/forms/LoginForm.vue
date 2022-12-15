@@ -2,13 +2,15 @@
   <Form
     ref="form"
     @submit="loginUser()"
-    class="bg-[#222030] w-[37.5rem] h-[35rem] px-28 rounded-xl flex flex-col justify-center items-center absolute top-40 left-[41.25rem]"
+    class="bg-[#222030] w-[37.5rem] h-[35rem] px-28 rounded-xl flex flex-col justify-center items-center absolute top-40 left-[34%]"
   >
-    <h2 class="text-white text-[2rem]">Create an account</h2>
-    <p class="text-[#6C757D] text-base">Start your journey!</p>
+    <h2 class="text-white text-[2rem]">{{ $t("create_an_account") }}</h2>
+    <p class="text-[#6C757D] text-base my-4">{{ $t("start_your_journey") }}!</p>
     <div class="w-[22.5rem]">
       <div class="flex flex-col">
-        <label for="email" class="mb-2 text-white text-base">Email</label>
+        <label for="email" class="mb-2 text-white text-base">{{
+          $t("email")
+        }}</label>
         <div class="rounded-md mb-7 flex relative">
           <Field
             v-slot="{ meta, field, errorMessage }"
@@ -19,12 +21,13 @@
             <input
               id="email"
               type="text"
-              class="bg-[#CED4DA] rounded-md h-10 p-3 outline-none w-full focus:outline-gray-500 focus:outline-4 outline-offset-0"
+              class="bg-[#CED4DA] rounded-md h-10 p-3 outline-none w-full focus:outline-gray-500 focus:outline-[0.25rem] outline-offset-0"
               v-bind="field"
-              placeholder="Enter your email"
+              :placeholder="$t('enter_your_email')"
               :class="{
-                'outline-4 outline-[#198754] outline-offset-0': meta.valid,
-                'outline-4 outline-[#E31221] outline-offset-0':
+                'outline-[0.25rem] outline-[#198754] outline-offset-0':
+                  meta.valid,
+                'outline-[0.25rem] outline-[#E31221] outline-offset-0':
                   meta.touched && !meta.valid,
               }"
               @focus="closeEmailButton = true"
@@ -54,13 +57,15 @@
         <div class="relative">
           <ErrorMessage
             name="email"
-            class="text-red-600 text-sm absolute bottom-1.5"
+            class="text-red-600 text-sm absolute bottom-0.5"
           />
         </div>
       </div>
 
       <div class="flex flex-col">
-        <label for="password" class="mb-2 text-white text-base">Password</label>
+        <label for="password" class="mb-2 text-white text-base">{{
+          $t("password")
+        }}</label>
         <div class="bg-[#CED4DA] rounded-md mb-7 flex relative">
           <Field
             v-slot="{ meta, field }"
@@ -71,12 +76,13 @@
             <input
               id="password"
               type="password"
-              class="bg-[#CED4DA] rounded-md h-10 p-3 outline-none w-full focus:outline-gray-500 focus:outline-4 outline-offset-0"
+              class="bg-[#CED4DA] rounded-md h-10 p-3 outline-none w-full focus:outline-gray-500 focus:outline-[0.25rem] outline-offset-0"
               v-bind="field"
-              placeholder="At least 8 & max.15 lower case characters"
+              :placeholder="$t('at_least_8_max_15_lower_case_characters')"
               :class="{
-                'outline-4 outline-[#198754] outline-offset-0': meta.valid,
-                'outline-4 outline-[#E31221] outline-offset-0':
+                'outline-[0.25rem] outline-[#198754] outline-offset-0':
+                  meta.valid,
+                'outline-[0.25rem] outline-[#E31221] outline-offset-0':
                   meta.touched && !meta.valid,
               }"
             />
@@ -91,7 +97,7 @@
         <div class="relative">
           <ErrorMessage
             name="password"
-            class="text-red-600 text-sm absolute bottom-1.5"
+            class="text-red-600 text-sm absolute bottom-0.5"
           />
         </div>
       </div>
@@ -104,25 +110,32 @@
             id="remember"
             type="checkbox"
           />
-          <label class="text-white ml-2" for="remember">Remember me</label>
+          <label class="text-white ml-2" for="remember">{{
+            $t("remember_me")
+          }}</label>
         </div>
-        <a class="text-[#0D6EFD]" @click="resetRoute()">Forgot password</a>
+        <a class="text-[#0D6EFD] cursor-pointer" @click="resetRoute()">{{
+          $t("forgot_password")
+        }}</a>
       </div>
 
-      <RedButton type="submit" class="w-full text-base p-2 rounded-md mt-2"
-        >Sign In</RedButton
-      >
+      <RedButton type="submit" class="w-full text-base p-2 rounded-md mt-2">{{
+        $t("sign_in")
+      }}</RedButton>
       <a
         :href="BACK_URL + '/auth/redirect/login'"
         class="flex w-full text-base p-2 rounded-md mt-6 border-[#CED4DA] border text-white justify-center items-center"
       >
-        <img class="mr-2" src="@/assets/googleIcon.svg" alt="" />Sign in with
-        Google
+        <img class="mr-2 w-4" src="@/assets/googleIcon.svg" alt="" />{{
+          $t("sign_in_with_google")
+        }}
       </a>
     </div>
     <div class="flex mt-8">
-      <p class="text-[#6C757D] mr-1">Already have an account?</p>
-      <a class="text-[#0D6EFD]" @click="signUp()">Sign Up</a>
+      <p class="text-[#6C757D] mr-1">{{ $t("already_have_an_account") }}?</p>
+      <a class="text-[#0D6EFD] cursor-pointer" @click="signUp()">{{
+        $t("sign_up")
+      }}</a>
     </div>
   </Form>
 </template>
@@ -134,6 +147,7 @@ import axiosInstance from "@/config/axios.js";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import RedButton from "@/components/ui/RedButton.vue";
 import { useAuthStore } from "@/store.js";
+import i18n from "@/i18n";
 
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 const email = ref("");
@@ -141,6 +155,7 @@ const password = ref("");
 const remember = ref(false);
 const closeEmailButton = ref(null);
 const form = ref(null);
+const locale = ref(i18n.global.locale);
 
 function resetRoute() {
   router.push({ path: "/forgot/password" });
@@ -179,23 +194,35 @@ function loginUser() {
       useAuthStore().authenticated = true;
       axiosInstance.get(BACK_URL + "/check-jwt").then((response) => {
         useAuthStore().userId = response.data.user.id;
-        if (response.data.user.email_verified_at !== "not-verified") {
+        if (response.data.user.email_verified !== "not-verified") {
           useAuthStore().verified = true;
+          router.push({ path: "/news-feed" });
         } else {
           useAuthStore().verified = false;
+          router.push({ path: "/error-401" });
         }
       });
-
-      router.push({ path: "/news-feed" });
     })
     .catch((error) => {
       if (error.response.status == 422) {
         if (error.response.data == "Wrong password") {
-          return form.value.setFieldError("password", error.response.data);
+          if (locale.value === "en") {
+            return form.value.setFieldError("password", error.response.data);
+          } else {
+            return form.value.setFieldError("password", "პაროლი არასწორია");
+          }
         }
         if (error.response.data.errors.email) {
-          form.value.setFieldError("email", error.response.data.errors.email);
-          return form.value.setFieldError("password", "Wrong password");
+          if (locale.value === "en") {
+            form.value.setFieldError("email", error.response.data.errors.email);
+          } else {
+            form.value.setFieldError("email", "იმეილი არარის რეგისტრირებული");
+          }
+          if (locale.value === "en") {
+            return form.value.setFieldError("password", "Wrong password");
+          } else {
+            return form.value.setFieldError("password", "პაროლი არასწორია");
+          }
         }
       }
     });

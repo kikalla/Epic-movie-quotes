@@ -22,7 +22,7 @@ import Error403Page from "@/pages/Error403Page.vue";
 import Error404Page from "@/pages/Error404Page.vue";
 import { useAuthStore } from "@/store.js";
 import axios from "axios";
-// import guards from "@/router/guards.js";
+import guards from "@/router/guards.js";
 
 axios.defaults.withCredentials = true;
 
@@ -33,13 +33,13 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomePage,
-      // beforeEnter: guards.notAuthenticated,
+      beforeEnter: guards.verified,
     },
     {
       path: "/register",
       name: "register",
       component: RegisterPage,
-      // beforeEnter: guards.notAuthenticated,
+      beforeEnter: [guards.verified, guards.Authenticated],
     },
     {
       path: "/verification-send",
@@ -55,13 +55,12 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: LoginPage,
-      // beforeEnter: guards.notAuthenticated,
+      beforeEnter: [guards.verified, guards.Authenticated],
     },
     {
       path: "/news-feed",
       name: "news-feed",
       component: NewsPage,
-      // beforeEnter: guards.isAuthenticated,
     },
     {
       path: "/reset/password",
@@ -87,43 +86,49 @@ const router = createRouter({
       path: "/movies",
       name: "movies",
       component: MoviesPage,
-      // beforeEnter: guards.isAuthenticated,
+      beforeEnter: guards.mustAuthenticated,
     },
     {
       path: "/movies/:movieId",
       name: "movie",
       component: MoviePage,
+      beforeEnter: guards.mustAuthenticated,
     },
     {
       path: "/movies/:movieId/edit",
       name: "movie-edit",
       component: MovieEditPage,
+      beforeEnter: guards.mustAuthenticated,
     },
     {
       path: "/movies/add-movie",
       name: "add-movie",
       component: AddMoviePage,
-      // beforeEnter: guards.isAuthenticated,
+      beforeEnter: guards.mustAuthenticated,
     },
     {
       path: "/movies/:movieId/add-quote",
       name: "add-quote",
       component: AddQuotePage,
+      beforeEnter: guards.mustAuthenticated,
     },
     {
       path: "/quote/:quoteId",
       name: "quote",
       component: QuotePage,
+      beforeEnter: guards.mustAuthenticated,
     },
     {
       path: "/quote/:quoteId/edit",
       name: "quote-edit",
       component: QuoteEditPage,
+      beforeEnter: guards.mustAuthenticated,
     },
     {
       path: "/profile",
       name: "profile",
       component: ProfilePage,
+      beforeEnter: guards.mustAuthenticated,
     },
     {
       path: "/error-401",
@@ -152,7 +157,7 @@ router.beforeEach(async (to, from, next) => {
       await axios.get(BACK_URL + "/check-jwt").then((response) => {
         authStore.authenticated = true;
         authStore.userId = response.data.user.id;
-        if (response.data.user.email_verified_at !== null) {
+        if (response.data.user.email_verified !== "not-verified") {
           authStore.verified = true;
         } else {
           authStore.verified = false;

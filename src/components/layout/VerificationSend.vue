@@ -3,16 +3,21 @@
     class="w-[33.75rem] h-[25.5rem] bg-[#222030] rounded-lg absolute top-56 left-[43.125rem] flex flex-col items-center text-center px-20 py-16"
   >
     <img class="w-14" src="@/assets/paperPlane.png" alt="paper-plane" />
-    <h2 class="text-white text-4xl mt-5 mb-8 font-medium">Thank You!</h2>
+    <h2 class="text-white text-4xl mt-5 mb-8 font-medium">
+      {{ $t("thank_you") }}!
+    </h2>
     <p class="text-white">
-      Please check your email and follow the instructions to activate your
-      account.
+      {{
+        $t(
+          "please_check_your_email_and_follow_the_instructions_to_activate_your_account"
+        )
+      }}
     </p>
     <a
       @click="newWindow()"
       class="text-white bg-[#E31221] w-full py-2 mt-10 rounded-lg"
       href=""
-      >Go to my email</a
+      >{{ $t("go_to_my_email") }}</a
     >
   </div>
 </template>

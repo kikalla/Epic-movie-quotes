@@ -4,19 +4,26 @@
     <div class="flex">
       <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
         <UserInfo></UserInfo>
-        <div @click="newsRoute" class="flex items-center my-11 ml-3">
-          <img src="@/assets/home.svg" alt="home" />
-          <a class="text-2xl ml-11">News feed</a>
+        <div
+          @click="newsRoute"
+          class="flex items-center my-11 ml-3 cursor-pointer"
+        >
+          <img src="@/assets/home.svg" class="h-[2rem]" alt="home" />
+          <a class="text-2xl ml-11 hover:text-red-500">{{ $t("news_feed") }}</a>
         </div>
         <div @click="moviesRoute" class="flex items-center ml-3 cursor-pointer">
-          <img src="@/assets/activeMovie.svg" alt="home" />
-          <a class="text-2xl ml-11">List of movies</a>
+          <img src="@/assets/activeMovie.svg" class="h-[2rem]" alt="home" />
+          <a class="text-2xl ml-11 hover:text-red-500">{{
+            $t("list_of_movies")
+          }}</a>
         </div>
       </div>
 
       <div class="w-4/5 pt-8 px-20 bg-[#0D0B14] text-white">
         <div class="flex flex-col mb-14">
-          <h2 class="text-2xl font-medium mb-8">Movie discription</h2>
+          <h2 class="text-2xl font-medium mb-8">
+            {{ $t("movie_discription") }}
+          </h2>
           <div v-if="movie" class="flex">
             <img
               class="w-[50.625rem] h-[27.5rem] rounded-xl object-cover"
@@ -26,45 +33,50 @@
             <div class="ml-5 w-1/2">
               <div class="flex justify-between">
                 <h2 class="text-2xl font-medium text-[#DDCCAA]">
-                  {{ movie.title.en }}
+                  {{ movie.title[$i18n.locale] }}
                 </h2>
                 <div
                   v-if="userId === movie.user_id"
                   class="flex justify-between items-center w-36 h-10 px-7 py-2 rounded-lg bg-[#24222F]"
                 >
                   <a @click="editMovie" class="cursor-pointer"
-                    ><img src="@/assets/edit.svg" alt="edit"
+                    ><img src="@/assets/edit.svg" class="w-[1.3rem]" alt="edit"
                   /></a>
                   <div class="h-3/4 border-[#6C757D] border"></div>
                   <a @click="deleteMovie" class="cursor-pointer"
-                    ><img src="@/assets/delete.svg" alt="delete"
+                    ><img
+                      src="@/assets/delete.svg"
+                      class="w-[1.3rem]"
+                      alt="delete"
                   /></a>
                 </div>
               </div>
               <div class="my-5">
-                Director:
-                <span class="ml-2">{{ movie.director.en }}</span>
+                {{ $t("director") }}:
+                <span class="ml-2">{{ movie.director[$i18n.locale] }}</span>
               </div>
               <p class="text-[#CED4DA] text-lg">
-                {{ movie.description.en }}
+                {{ movie.description[$i18n.locale] }}
               </p>
             </div>
           </div>
 
           <div class="flex justify-start items-center mt-10">
             <h2 v-if="movie" class="text-2xl font-medium mr-8">
-              Quotes (Total {{ movie.quote_number }})
+              {{ $t("quotes") }} ({{ $t("total") }} {{ movie.quote_number }})
             </h2>
             <RedButton
               @click="addQuoteRoute"
               class="flex items-center h-12 rounded-md p-4"
             >
-              <img class="mr-2" src="@/assets/plus.svg" alt="plus" />Add quote
+              <img class="mr-2 w-6" src="@/assets/plus.svg" alt="plus" />{{
+                $t("add_quote")
+              }}
             </RedButton>
           </div>
         </div>
 
-        <div class="overflow-scroll h-[26vh]">
+        <div class="overflow-scroll scrollbar-hide h-[26vh]">
           <div
             :id="quote.id + 'delete'"
             v-for="(quote, index) in quotes"
@@ -81,10 +93,10 @@
               :id="quote.id"
               v-bind:class="[
                 userId !== quote.user_id && userId !== movie.user_id
-                  ? 'h-14 pt-4'
+                  ? '!h-14 !pt-4'
                   : '',
                 userId !== quote.user_id && userId === movie.user_id
-                  ? 'h-28 pt-4'
+                  ? '!h-28 !pt-4'
                   : '',
               ]"
               class="absolute hidden w-64 h-52 pl-10 pt-9 bg-[#24222F] rounded-lg top-12 -right-48 z-10"
@@ -94,23 +106,31 @@
                 class="flex mb-8 cursor-pointer"
               >
                 <img class="mr-4" src="@/assets/openEye.svg" alt="eye" />
-                <p>View Quote</p>
+                <p>{{ $t("view_quote") }}</p>
               </div>
               <div
                 v-if="userId === quote.user_id"
                 @click="quoteEditRoute(quote.id)"
                 class="flex mb-8 cursor-pointer"
               >
-                <img class="mr-4" src="@/assets/edit.svg" alt="eye" />
-                <p>Edit</p>
+                <img
+                  class="mr-4 w-[1.3rem]"
+                  src="@/assets/edit.svg"
+                  alt="eye"
+                />
+                <p>{{ $t("edit") }}</p>
               </div>
               <div
                 v-if="userId === movie.user_id || userId === quote.user_id"
                 @click="deleteQuote(quote.id, quote.id + 'delete')"
                 class="flex cursor-pointer"
               >
-                <img class="mr-4" src="@/assets/delete.svg" alt="eye" />
-                <p>Delete</p>
+                <img
+                  class="mr-4 w-[1.3rem]"
+                  src="@/assets/delete.svg"
+                  alt="eye"
+                />
+                <p>{{ $t("delete") }}</p>
               </div>
             </div>
             <div class="flex items-center mb-6">
@@ -119,13 +139,17 @@
                 :src="BACK_URL_IMAGE + '/storage/' + quote.image"
                 alt="photo"
               />
-              <p class="text-2xl">"{{ quote.quote.en }}"</p>
+              <p class="text-2xl">"{{ quote.quote[$i18n.locale] }}"</p>
             </div>
             <div class="border-t border-[#efefef] opacity-20 w-full"></div>
             <div class="flex items-center mt-6">
               <div class="flex mr-8 items-center">
                 <p class="text-xl mr-3">{{ quote.comment_number }}</p>
-                <img src="@/assets/comment.svg" alt="comment" />
+                <img
+                  src="@/assets/comment.svg"
+                  class="w-[2rem]"
+                  alt="comment"
+                />
               </div>
               <div
                 @click="likeDislike(quote.id, index)"
@@ -135,9 +159,15 @@
                 <img
                   v-if="userLikes[index]"
                   src="@/assets/activeLike.svg"
+                  class="w-[2rem]"
                   alt="like"
                 />
-                <img v-else src="@/assets/like.svg" alt="like" />
+                <img
+                  v-else
+                  src="@/assets/like.svg"
+                  class="w-[2rem]"
+                  alt="like"
+                />
               </div>
             </div>
           </div>
@@ -215,7 +245,9 @@ function likeDislike(quoteId, index) {
       }
     })
     .catch((error) => {
-      console.log(error);
+      if (error.response.status === 422) {
+        console.log("Unprocessable Entity: " + error.response);
+      }
     });
 }
 
@@ -226,7 +258,9 @@ function deleteMovie() {
       router.push({ path: "/movies" });
     })
     .catch((error) => {
-      if (error.response.status === 403) router.push({ path: "/error-403" });
+      if (error.response.status === 403) {
+        router.push({ path: "/error-403" });
+      }
     });
 }
 
@@ -238,7 +272,9 @@ function deleteQuote(id, idDelete) {
       movie.value.quote_number = movie.value.quote_number - 1;
     })
     .catch((error) => {
-      if (error.response.status === 403) router.push({ path: "/error-403" });
+      if (error.response.status === 403) {
+        router.push({ path: "/error-403" });
+      }
     });
 }
 
