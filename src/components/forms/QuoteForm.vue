@@ -135,7 +135,9 @@ function addQuote() {
       router.push({ path: "/movies/" + movieId });
     })
     .catch((error) => {
-      console.log(error);
+      if (error.response.status === 422) {
+        console.log("Unprocessable Entity: " + error.response);
+      }
     });
 }
 
@@ -150,8 +152,10 @@ onBeforeMount(() => {
       }
       username.value = response.data[1];
     })
-    .catch(() => {
-      router.push({ path: "/error-404" });
+    .catch((error) => {
+      if (error.response.status === 401) {
+        router.push({ path: "/error-401" });
+      }
     });
 });
 </script>

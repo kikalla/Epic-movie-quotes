@@ -79,6 +79,14 @@ const translations = {
   add: "Add",
   cancel: "Cancel",
   new_email: "New email",
+  sorry_but_you_must_authenticate_and_verified_to_access_this_page:
+    "Sorry, but you must authenticate and verified to access this page",
+  sorry_but_you_dont_have_permission_to_access_this_page:
+    "Sorry, but you don’t have permission to access this page",
+  we_can_see_the_page_you_are_looking_for:
+    "We can't see the page you are looking for",
+  return_back: "Return Back",
+  main: "Main",
 };
 
 export default translations;

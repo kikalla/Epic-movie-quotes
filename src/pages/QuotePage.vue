@@ -190,7 +190,9 @@ function deleteQuote() {
       router.push({ path: "/movies/" + quote.value.movie_id });
     })
     .catch((error) => {
-      if (error.response.status === 403) router.push({ path: "/error-403" });
+      if (error.response.status === 403) {
+        router.push({ path: "/error-403" });
+      }
     });
 }
 
@@ -219,18 +221,27 @@ function quoteComment() {
     quote_id: quote.value.id,
   };
   if (comment.value !== "") {
-    axiosInstance.post(BACK_URL + "/add-comment", data).then((response) => {
-      comment.value = "";
-      quote.value.comment_number = quote.value.comment_number + 1;
-      comments.value.push(response.data[0]);
-      usernames.value.push(response.data[1]);
-      if (response.data[2] === "/images/default.jpg") {
-        usersImages.value.push(BACK_URL_IMAGE + response.data[2]);
-      } else {
-        usersImages.value.push(BACK_URL_IMAGE + "/storage/" + response.data[2]);
-      }
-      showComments.value = true;
-    });
+    axiosInstance
+      .post(BACK_URL + "/add-comment", data)
+      .then((response) => {
+        comment.value = "";
+        quote.value.comment_number = quote.value.comment_number + 1;
+        comments.value.push(response.data[0]);
+        usernames.value.push(response.data[1]);
+        if (response.data[2] === "/images/default.jpg") {
+          usersImages.value.push(BACK_URL_IMAGE + response.data[2]);
+        } else {
+          usersImages.value.push(
+            BACK_URL_IMAGE + "/storage/" + response.data[2]
+          );
+        }
+        showComments.value = true;
+      })
+      .catch((error) => {
+        if (error.response.status === 422) {
+          console.log("Unprocessable Entity: " + error.response);
+        }
+      });
   }
 }
 
@@ -269,8 +280,10 @@ onBeforeMount(() => {
         }
       });
     })
-    .catch(() => {
-      router.push({ path: "/error-404" });
+    .catch((error) => {
+      if (error.response.status === 404) {
+        router.push({ path: "/error-404" });
+      }
     });
   axiosInstance
     .post(BACK_URL + "/get-likes", {
@@ -280,8 +293,10 @@ onBeforeMount(() => {
       likes.value = response.data[0];
       liked.value = response.data[1];
     })
-    .catch(() => {
-      router.push({ path: "/error-404" });
+    .catch((error) => {
+      if (error.response.status === 404) {
+        router.push({ path: "/error-404" });
+      }
     });
   axiosInstance.post(BACK_URL + "/get-user-info").then((response) => {
     if (response.data[0] === "/images/default.jpg") {

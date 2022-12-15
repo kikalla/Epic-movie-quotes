@@ -194,14 +194,14 @@ function loginUser() {
       useAuthStore().authenticated = true;
       axiosInstance.get(BACK_URL + "/check-jwt").then((response) => {
         useAuthStore().userId = response.data.user.id;
-        if (response.data.user.email_verified_at !== "not-verified") {
+        if (response.data.user.email_verified !== "not-verified") {
           useAuthStore().verified = true;
+          router.push({ path: "/news-feed" });
         } else {
           useAuthStore().verified = false;
+          router.push({ path: "/error-401" });
         }
       });
-
-      router.push({ path: "/news-feed" });
     })
     .catch((error) => {
       if (error.response.status == 422) {

@@ -371,7 +371,9 @@ function addQuote() {
       showQuoteForm.value = false;
     })
     .catch((error) => {
-      console.log(error);
+      if (error.response.status === 422) {
+        console.log("Unprocessable Entity: " + error.response);
+      }
     });
 }
 function inputStyle() {
@@ -405,7 +407,9 @@ function likeDislike(id, index) {
       }
     })
     .catch((error) => {
-      console.log(error);
+      if (error.response.status === 422) {
+        console.log("Unprocessable Entity: " + error.response);
+      }
     });
 }
 
@@ -484,22 +488,29 @@ function quoteComment(quoteId, quoteIndex, comment) {
   };
   if (comment !== "") {
     document.getElementById(quoteIndex + "input").value = "";
-    axiosInstance.post(BACK_URL + "/add-comment", data).then((response) => {
-      quotes.value[quoteIndex].showComments = true;
-      quotes.value[quoteIndex].comment_number =
-        quotes.value[quoteIndex].comment_number + 1;
-      quotes.value[quoteIndex].comments.push(response.data[0].comment);
-      quotes.value[quoteIndex].usernames.push(response.data[1]);
-      if (response.data[2] === "/images/default.jpg") {
-        quotes.value[quoteIndex].usersImages.push(
-          BACK_URL_IMAGE + response.data[2]
-        );
-      } else {
-        quotes.value[quoteIndex].usersImages.push(
-          BACK_URL_IMAGE + "/storage/" + response.data[2]
-        );
-      }
-    });
+    axiosInstance
+      .post(BACK_URL + "/add-comment", data)
+      .then((response) => {
+        quotes.value[quoteIndex].showComments = true;
+        quotes.value[quoteIndex].comment_number =
+          quotes.value[quoteIndex].comment_number + 1;
+        quotes.value[quoteIndex].comments.push(response.data[0].comment);
+        quotes.value[quoteIndex].usernames.push(response.data[1]);
+        if (response.data[2] === "/images/default.jpg") {
+          quotes.value[quoteIndex].usersImages.push(
+            BACK_URL_IMAGE + response.data[2]
+          );
+        } else {
+          quotes.value[quoteIndex].usersImages.push(
+            BACK_URL_IMAGE + "/storage/" + response.data[2]
+          );
+        }
+      })
+      .catch((error) => {
+        if (error.response.status === 422) {
+          console.log("Unprocessable Entity: " + error.response);
+        }
+      });
   }
 }
 
@@ -570,8 +581,15 @@ onBeforeMount(() => {
     username.value = response.data[1];
   });
 
-  axiosInstance.post(BACK_URL + "/get-movies").then((response) => {
-    usersMovies.value = response.data;
-  });
+  axiosInstance
+    .post(BACK_URL + "/get-movies")
+    .then((response) => {
+      usersMovies.value = response.data;
+    })
+    .catch((error) => {
+      if (error.response.status === 404) {
+        router.push({ path: "/error-404" });
+      }
+    });
 });
 </script>

@@ -111,8 +111,15 @@ function search() {
     });
 }
 onBeforeMount(() => {
-  axiosInstance.post(BACK_URL + "/get-movies").then((response) => {
-    movies.value = response.data;
-  });
+  axiosInstance
+    .post(BACK_URL + "/get-movies")
+    .then((response) => {
+      movies.value = response.data;
+    })
+    .catch((error) => {
+      if (error.response.status === 404) {
+        router.push({ path: "/error-404" });
+      }
+    });
 });
 </script>

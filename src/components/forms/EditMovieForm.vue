@@ -176,7 +176,9 @@ function updateMovie() {
       router.push({ path: "/movies/" + movieId });
     })
     .catch((error) => {
-      if (error.response.status === 403) router.push({ path: "/error-403" });
+      if (error.response.status === 403) {
+        router.push({ path: "/error-403" });
+      }
     });
 }
 
@@ -198,8 +200,10 @@ onBeforeMount(() => {
       }
       username.value = response.data[2];
     })
-    .catch(() => {
-      router.push({ path: "/error-404" });
+    .catch((error) => {
+      if (error.response.status === 404) {
+        router.push({ path: "/error-404" });
+      }
     });
 });
 </script>

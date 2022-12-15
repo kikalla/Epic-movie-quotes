@@ -78,6 +78,14 @@ const translations = {
   add: "დამატება",
   cancel: "გაუქმება",
   new_email: "ახალი იმეილი",
+  sorry_but_you_must_authenticate_and_verified_to_access_this_page:
+    "სამწუხაროდ უნდა იყოთ ავტორიზირებული და ვერიფიცირებული რომ მოხვდეთ ამ გვერდზე",
+  sorry_but_you_dont_have_permission_to_access_this_page:
+    "სამწუხაროდ არგაქვთ ამ გვერდზე წვდომის უფლება",
+  we_can_see_the_page_you_are_looking_for:
+    "ვერ ვნახეთ გვერდი რომელსაც თქვენ ეძებდით",
+  return_back: "უკან დაბრუნება",
+  main: "მთავარი",
 };
 
 export default translations;

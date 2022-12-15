@@ -12,7 +12,7 @@
           <a class="text-2xl ml-11 hover:text-red-500">{{ $t("news_feed") }}</a>
         </div>
         <div @click="moviesRoute" class="flex items-center ml-3 cursor-pointer">
-          <img src="@/assets/movie.svg" class="h-[2rem]" alt="home" />
+          <img src="@/assets/activeMovie.svg" class="h-[2rem]" alt="home" />
           <a class="text-2xl ml-11 hover:text-red-500">{{
             $t("list_of_movies")
           }}</a>
@@ -416,7 +416,9 @@ function makePrimary(index) {
       primary.value = index;
     })
     .catch((error) => {
-      console.log(error);
+      if (error.response.status === 401) {
+        router.push({ path: "/error-401" });
+      }
     });
 }
 
@@ -451,6 +453,11 @@ function deleteEmail(index) {
     })
     .then(() => {
       document.getElementById(index).remove();
+    })
+    .catch((error) => {
+      if (error.response.status === 403) {
+        router.push({ path: "/error-403" });
+      }
     });
 }
 

@@ -27,13 +27,20 @@ function userRoute() {
 }
 
 onBeforeMount(() => {
-  axiosInstance.post(BACK_URL + "/get-user-info").then((response) => {
-    if (response.data[0] === "/images/default.jpg") {
-      image.value = BACK_URL_IMAGE + response.data[0];
-    } else {
-      image.value = BACK_URL_IMAGE + "/storage/" + response.data[0];
-    }
-    username.value = response.data[1];
-  });
+  axiosInstance
+    .post(BACK_URL + "/get-user-info")
+    .then((response) => {
+      if (response.data[0] === "/images/default.jpg") {
+        image.value = BACK_URL_IMAGE + response.data[0];
+      } else {
+        image.value = BACK_URL_IMAGE + "/storage/" + response.data[0];
+      }
+      username.value = response.data[1];
+    })
+    .catch((error) => {
+      if (error.response.status === 401) {
+        router.push({ path: "/error-401" });
+      }
+    });
 });
 </script>

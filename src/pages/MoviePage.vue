@@ -93,10 +93,10 @@
               :id="quote.id"
               v-bind:class="[
                 userId !== quote.user_id && userId !== movie.user_id
-                  ? 'h-14 pt-4'
+                  ? '!h-14 !pt-4'
                   : '',
                 userId !== quote.user_id && userId === movie.user_id
-                  ? 'h-28 pt-4'
+                  ? '!h-28 !pt-4'
                   : '',
               ]"
               class="absolute hidden w-64 h-52 pl-10 pt-9 bg-[#24222F] rounded-lg top-12 -right-48 z-10"
@@ -245,7 +245,9 @@ function likeDislike(quoteId, index) {
       }
     })
     .catch((error) => {
-      console.log(error);
+      if (error.response.status === 422) {
+        console.log("Unprocessable Entity: " + error.response);
+      }
     });
 }
 
@@ -256,7 +258,9 @@ function deleteMovie() {
       router.push({ path: "/movies" });
     })
     .catch((error) => {
-      if (error.response.status === 403) router.push({ path: "/error-403" });
+      if (error.response.status === 403) {
+        router.push({ path: "/error-403" });
+      }
     });
 }
 
@@ -268,7 +272,9 @@ function deleteQuote(id, idDelete) {
       movie.value.quote_number = movie.value.quote_number - 1;
     })
     .catch((error) => {
-      if (error.response.status === 403) router.push({ path: "/error-403" });
+      if (error.response.status === 403) {
+        router.push({ path: "/error-403" });
+      }
     });
 }
 
@@ -278,8 +284,10 @@ onBeforeMount(() => {
     .then((response) => {
       movie.value = response.data[0];
     })
-    .catch(() => {
-      router.push({ path: "/error-404" });
+    .catch((error) => {
+      if (error.response.status === 404) {
+        router.push({ path: "/error-404" });
+      }
     });
   axiosInstance
     .post(BACK_URL + "/get-quotes", {
@@ -290,8 +298,10 @@ onBeforeMount(() => {
       quotesLikes.value = response.data[1];
       userLikes.value = response.data[2];
     })
-    .catch(() => {
-      router.push({ path: "/error-404" });
+    .catch((error) => {
+      if (error.response.status === 404) {
+        router.push({ path: "/error-404" });
+      }
     });
 });
 </script>
