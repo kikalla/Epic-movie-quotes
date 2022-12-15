@@ -36,7 +36,7 @@ This website is for people who likes movies, in this website you can register an
 ### 1. First of all you need to clone Epic movie-quotes repository from github:
 
 ```sh
-git clone https://github.com/RedberryInternship/giorgi-kikadze-epic-movie-quotes-api.git
+git clone https://github.com/RedberryInternship/giorgi-kikadze-epic-movie-quotes.git
 ```
 
 ### 2. Then install all the JS dependencies:
