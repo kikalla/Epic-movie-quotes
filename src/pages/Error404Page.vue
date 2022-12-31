@@ -7,7 +7,7 @@
         {{ $t("we_can_see_the_page_you_are_looking_for") }}
       </p>
       <RedButton
-        @click="$router.go(-1)"
+        @click="$router.go(-2)"
         class="p-4 mt-4 rounded-xl text-2xl text-center"
       >
         {{ $t("return_back") }}

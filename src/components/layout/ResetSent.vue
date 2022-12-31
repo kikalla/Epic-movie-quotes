@@ -1,15 +1,13 @@
 <template>
   <div
-    class="w-[33.75rem] h-[25.5rem] bg-[#222030] rounded-lg absolute top-56 left-[43.125rem] flex flex-col items-center text-center px-20 py-16"
+    class="w-[33.75rem] h-[25.5rem] bg-[#222030] rounded-lg absolute top-56 left-[36%] flex flex-col items-center text-center px-20 py-16"
   >
     <img class="w-14" src="@/assets/paperPlane.png" alt="paper-plane" />
     <h2 class="text-white text-4xl mt-5 mb-8 font-medium">
       {{ $t("check_your_email") }}
     </h2>
     <p class="text-white">
-      {{
-        $nextTick("we_have_sent_a_password_recover_instructions_to_your_email")
-      }}
+      {{ $t("we_have_sent_a_password_recover_instructions_to_your_email") }}
     </p>
     <a
       @click="newWindow()"

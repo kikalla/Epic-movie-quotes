@@ -2,7 +2,7 @@
   <PageHeader></PageHeader>
   <div class="w-full h-screen pt-24 bg-[#0D0B14]">
     <div class="flex">
-      <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
+      <div class="w-1/5 pl-16 pt-6 text-white bg-[#0D0B14]">
         <UserInfo></UserInfo>
         <div @click="newsRoute" class="flex items-center my-11 ml-3">
           <img src="@/assets/home.svg" class="h-[2rem]" alt="home" />

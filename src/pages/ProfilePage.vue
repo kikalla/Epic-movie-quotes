@@ -2,7 +2,7 @@
   <PageHeader></PageHeader>
   <div class="w-full h-screen pt-24 bg-[#0D0B14]">
     <div class="flex">
-      <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
+      <div class="w-1/5 pl-16 pt-6 text-white bg-[#0D0B14]">
         <UserInfo></UserInfo>
         <div
           @click="newsRoute"
@@ -41,7 +41,7 @@
           <input
             v-model="newEmail"
             class="w-[33rem] h-12 pl-3 mt-1 bg-[#CED4DA] rounded-lg text-black text-xl placeholder:text-black outline-none"
-            type="text"
+            type="email"
             :placeholder="$t('enter_new_email')"
           />
         </div>

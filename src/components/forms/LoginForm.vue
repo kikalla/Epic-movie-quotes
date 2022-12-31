@@ -143,7 +143,7 @@
 <script setup>
 import { ref } from "vue";
 import router from "@/router/index.js";
-import axiosInstance from "@/config/axios.js";
+import axios from "axios";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import RedButton from "@/components/ui/RedButton.vue";
 import { useAuthStore } from "@/store.js";
@@ -188,20 +188,11 @@ function loginUser() {
     password: password.value,
     remember: remember.value,
   };
-  axiosInstance
+  axios
     .post(BACK_URL + "/login", data)
     .then(function () {
       useAuthStore().authenticated = true;
-      axiosInstance.get(BACK_URL + "/check-jwt").then((response) => {
-        useAuthStore().userId = response.data.user.id;
-        if (response.data.user.email_verified !== "not-verified") {
-          useAuthStore().verified = true;
-          router.push({ path: "/news-feed" });
-        } else {
-          useAuthStore().verified = false;
-          router.push({ path: "/error-401" });
-        }
-      });
+      router.push({ path: "/news-feed" });
     })
     .catch((error) => {
       if (error.response.status == 422) {
