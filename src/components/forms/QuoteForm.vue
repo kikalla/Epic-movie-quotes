@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-[56rem] h-[54rem] px-8 bg-[#11101A] flex flex-col absolute top-28 left-[33rem] rounded-xl text-white"
+    class="w-[56rem] max-h-[54rem] h-[75vh] px-8 bg-[#11101A] flex flex-col absolute top-28 left-[33rem] rounded-xl text-white"
   >
     <img
       @click="close()"
@@ -13,85 +13,86 @@
       <h2 class="text-2xl font-medium">{{ $t("write_new_quote") }}</h2>
       <div class="border-t border-[#efefef] opacity-20 my-6 w-[108%]"></div>
     </div>
-    <div class="flex items-center my-2">
-      <img
-        class="w-[3.75rem] h-[3.75rem] rounded-[50%] object-cover"
-        :src="userImage"
-        alt="profile"
-      />
-      <p class="text-xl ml-4">{{ username }}</p>
-    </div>
-    <div v-if="movie" class="flex mt-5">
-      <img
-        class="w-1/3 h-40 rounded-xl object-cover"
-        :src="BACK_URL_IMAGE + '/storage/' + movie.image"
-        alt=""
-      />
-      <div class="ml-5 w-2/3">
-        <div class="flex justify-between">
-          <h2 class="text-2xl font-medium text-[#DDCCAA]">
-            {{ movie.title[$i18n.locale] }}
-          </h2>
-        </div>
-        <div class="my-5">
-          {{ $t("director") }}:
-          <span class="ml-2">{{ movie.director[$i18n.locale] }}</span>
-        </div>
-      </div>
-    </div>
-
-    <form @submit.prevent="addQuote">
-      <div
-        class="border-[#6C757D] border rounded-lg flex justify-between items-start pt-2 my-5"
-      >
-        <textarea
-          v-model="quoteEn"
-          required
-          name="quote-en"
-          class="bg-[#11101A] h-[5.5rem] outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg resize-none"
-          placeholder="Start create new quote
-"
-        ></textarea>
-        <p class="mr-4 text-[#6C757D]">Eng</p>
-      </div>
-
-      <div
-        class="border-[#6C757D] border rounded-lg flex justify-between items-start pt-2 mb-5"
-      >
-        <textarea
-          v-model="quoteKa"
-          required
-          name="quote-ka"
-          class="bg-[#11101A] h-[5.5rem] outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg resize-none"
-          placeholder="ახალი ციტატა"
-        ></textarea>
-        <p class="mr-4 text-[#6C757D]">ქარ</p>
-      </div>
-
-      <div
-        class="border-[#6C757D] border rounded-lg flex items-center h-[5.5rem] mb-16"
-      >
-        <img class="mx-4 w-[2rem]" src="@/assets/camera.svg" alt="camera" />
-        <p class="text-xl">{{ $t("drag_drop_your_image_here_or") }}</p>
-        <label
-          class="bg-[#9747FF66] cursor-pointer text-xl p-2 ml-2 z-10"
-          for="image"
-          >{{ $t("choose_file") }}
-        </label>
-
-        <input
-          @change="handleChange"
-          required
-          class="w-[1px] h-[1px] relative right-1 z-0"
-          id="image"
-          name="image"
-          type="file"
+    <div class="scrollbar-hide overflow-scroll">
+      <div class="flex items-center my-2">
+        <img
+          class="w-[3.75rem] h-[3.75rem] rounded-[50%] object-cover"
+          :src="userImage"
+          alt="profile"
         />
+        <p class="text-xl ml-4">{{ username }}</p>
       </div>
-      <RedButton class="py-2 rounded-md text-xl w-full">{{
-        $t("add_quote")
-      }}</RedButton>
-    </form>
+      <div v-if="movie" class="flex mt-5">
+        <img
+          class="w-1/3 h-40 rounded-xl object-cover"
+          :src="BACK_URL_IMAGE + '/storage/' + movie.image"
+          alt=""
+        />
+        <div class="ml-5 w-2/3">
+          <div class="flex justify-between">
+            <h2 class="text-2xl font-medium text-[#DDCCAA]">
+              {{ movie.title[$i18n.locale] }}
+            </h2>
+          </div>
+          <div class="my-5">
+            {{ $t("director") }}:
+            <span class="ml-2">{{ movie.director[$i18n.locale] }}</span>
+          </div>
+        </div>
+      </div>
+
+      <form @submit.prevent="addQuote">
+        <div
+          class="border-[#6C757D] border rounded-lg flex justify-between items-start pt-2 my-5"
+        >
+          <textarea
+            v-model="quoteEn"
+            required
+            name="quote-en"
+            class="bg-[#11101A] h-[5.5rem] outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg resize-none"
+            placeholder="Start create new quote"
+          ></textarea>
+          <p class="mr-4 text-[#6C757D]">Eng</p>
+        </div>
+
+        <div
+          class="border-[#6C757D] border rounded-lg flex justify-between items-start pt-2 mb-5"
+        >
+          <textarea
+            v-model="quoteKa"
+            required
+            name="quote-ka"
+            class="bg-[#11101A] h-[5.5rem] outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg resize-none"
+            placeholder="ახალი ციტატა"
+          ></textarea>
+          <p class="mr-4 text-[#6C757D]">ქარ</p>
+        </div>
+
+        <div
+          class="border-[#6C757D] border rounded-lg flex items-center h-[5.5rem] mb-16"
+        >
+          <img class="mx-4 w-[2rem]" src="@/assets/camera.svg" alt="camera" />
+          <p class="text-xl">{{ $t("drag_drop_your_image_here_or") }}</p>
+          <label
+            class="bg-[#9747FF66] cursor-pointer text-xl p-2 ml-2 z-10"
+            for="image"
+            >{{ $t("choose_file") }}
+          </label>
+
+          <input
+            @change="handleChange"
+            required
+            class="w-[1px] h-[1px] relative right-1 z-0"
+            id="image"
+            name="image"
+            type="file"
+          />
+        </div>
+        <RedButton class="py-2 rounded-md text-xl w-full">{{
+          $t("add_quote")
+        }}</RedButton>
+      </form>
+    </div>
   </div>
 </template>
 

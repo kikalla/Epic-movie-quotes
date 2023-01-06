@@ -131,7 +131,9 @@
         }}
       </a>
     </div>
-    <div class="flex mt-8">
+    <p class="text-red-600 text-sm my-4">{{ error }}</p>
+
+    <div class="flex">
       <p class="text-[#6C757D] mr-1">{{ $t("already_have_an_account") }}?</p>
       <a class="text-[#0D6EFD] cursor-pointer" @click="signUp()">{{
         $t("sign_up")
@@ -143,11 +145,12 @@
 <script setup>
 import { ref } from "vue";
 import router from "@/router/index.js";
-import axiosInstance from "@/config/axios.js";
+import axios from "axios";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import RedButton from "@/components/ui/RedButton.vue";
 import { useAuthStore } from "@/store.js";
 import i18n from "@/i18n";
+import { useRouter } from "vue-router";
 
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 const email = ref("");
@@ -156,7 +159,10 @@ const remember = ref(false);
 const closeEmailButton = ref(null);
 const form = ref(null);
 const locale = ref(i18n.global.locale);
+const error = ref("");
+const routerUse = useRouter();
 
+error.value = routerUse.currentRoute.value.query.error;
 function resetRoute() {
   router.push({ path: "/forgot/password" });
 }
@@ -188,20 +194,11 @@ function loginUser() {
     password: password.value,
     remember: remember.value,
   };
-  axiosInstance
+  axios
     .post(BACK_URL + "/login", data)
     .then(function () {
       useAuthStore().authenticated = true;
-      axiosInstance.get(BACK_URL + "/check-jwt").then((response) => {
-        useAuthStore().userId = response.data.user.id;
-        if (response.data.user.email_verified !== "not-verified") {
-          useAuthStore().verified = true;
-          router.push({ path: "/news-feed" });
-        } else {
-          useAuthStore().verified = false;
-          router.push({ path: "/error-401" });
-        }
-      });
+      router.push({ path: "/news-feed" });
     })
     .catch((error) => {
       if (error.response.status == 422) {

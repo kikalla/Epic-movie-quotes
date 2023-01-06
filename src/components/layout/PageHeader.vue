@@ -13,7 +13,7 @@
       <select
         name="lang"
         id="lang"
-        class="h-7 text-white bg-[#181624] mx-6 outline-none"
+        class="h-7 text-white bg-[#181624] mx-6 outline-none cursor-pointer"
         v-model="$i18n.locale"
       >
         <option value="en">Eng</option>

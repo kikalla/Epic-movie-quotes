@@ -2,7 +2,7 @@
   <PageHeader></PageHeader>
   <div class="w-full h-screen pt-24 bg-[#0D0B14]">
     <div class="flex">
-      <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
+      <div class="w-1/5 pl-16 pt-6 text-white bg-[#0D0B14]">
         <UserInfo></UserInfo>
         <div
           @click="newsRoute"
@@ -41,7 +41,7 @@
           <input
             v-model="newEmail"
             class="w-[33rem] h-12 pl-3 mt-1 bg-[#CED4DA] rounded-lg text-black text-xl placeholder:text-black outline-none"
-            type="text"
+            type="email"
             :placeholder="$t('enter_new_email')"
           />
         </div>
@@ -63,12 +63,22 @@
         <h2 class="text-2xl font-medium">{{ $t("my_profile") }}</h2>
         <Form @submit="editUser" ref="form">
           <div
-            class="mt-20 h-[52rem] w-[62.5rem] px-20 pt-28 bg-[#11101A] rounded-xl relative"
+            class="mt-4 max-h-[58rem] h-[83vh] w-[62.5rem] px-20 pt-4 bg-[#11101A] rounded-xl relative overflow-scroll scrollbar-hide"
           >
-            <div class="flex">
-              <label
-                class="w-72 m-auto text-center relative right-[1rem] bottom-4 text-xl"
-                for="image"
+            <div class="flex flex-col">
+              <img
+                v-if="chosenImage"
+                :src="chosenImage"
+                class="w-[11.5rem] h-[11.5rem] m-auto mb-4 rounded-[50%] object-cover"
+                alt="profile"
+              />
+              <img
+                v-else
+                class="w-[11.5rem] h-[11.5rem] m-auto mb-4 rounded-[50%] object-cover"
+                :src="image"
+                alt="profile"
+              />
+              <label class="w-72 m-auto text-center text-xl" for="image"
                 >{{ $t("upload_new_photo") }}
               </label>
               <input
@@ -77,18 +87,6 @@
                 id="image"
                 name="image"
                 type="file"
-              />
-              <img
-                v-if="chosenImage"
-                :src="chosenImage"
-                class="w-[11.5rem] h-[11.5rem] m-auto absolute left-[24.75rem] -top-[5.75rem] rounded-[50%] object-cover"
-                alt="profile"
-              />
-              <img
-                v-else
-                class="w-[11.5rem] h-[11.5rem] m-auto absolute left-[24.75rem] -top-[5.75rem] rounded-[50%] object-cover"
-                :src="image"
-                alt="profile"
               />
             </div>
             <div class="flex items-center">
@@ -128,7 +126,7 @@
               class="border-t border-[#efefef] opacity-20 mt-12 mb-8 w-[33rem]"
             ></div>
 
-            <div class="overflow-scroll scrollbar-hide h-[20vh]">
+            <div class="overflow-scroll scrollbar-hide h-[12rem]">
               <div class="flex flex-col mb-6" id="true">
                 <p>{{ $t("email") }}</p>
 
@@ -288,7 +286,7 @@
                 {{ $t("edit") }}
               </div>
             </div>
-            <div class="flex items-center">
+            <div class="flex items-center mb-4">
               <Field
                 as="div"
                 v-slot="{ meta, field }"

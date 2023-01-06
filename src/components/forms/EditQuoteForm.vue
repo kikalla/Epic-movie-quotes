@@ -1,7 +1,7 @@
 <template>
   <div v-if="quote" class="w-4/5 pt-4 px-20 bg-[#0D0B14] text-white">
     <div
-      class="w-[44rem] h-[48rem] m-auto px-8 right-[6.5rem] bg-[#11101A] flex flex-col relative rounded-xl text-white"
+      class="w-[44rem] max-h-[54rem] h-[85vh] m-auto px-8 right-[6.5rem] bg-[#11101A] flex flex-col relative rounded-xl text-white"
     >
       <img
         @click="close()"
@@ -20,77 +20,79 @@
         <h2 class="text-2xl font-medium">{{ $t("view_quote") }}</h2>
         <div class="border-t border-[#efefef] opacity-20 my-6 w-[108%]"></div>
       </div>
-      <div class="flex items-center">
-        <img
-          class="w-[3.75rem] h-[3.75rem] rounded-[50%] object-cover"
-          :src="userImage"
-          alt="profile"
-        />
-        <p class="text-xl ml-4">{{ username }}</p>
-      </div>
-      <form @submit.prevent="updateQuote">
-        <div
-          class="border-[#6C757D] border rounded-lg flex justify-between items-start pt-2 my-5"
-        >
-          <textarea
-            v-model="quoteEn"
-            required
-            name="quote-en"
-            class="bg-[#11101A] h-[4.5rem] outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg resize-none"
-            placeholder="Start create new quote
-"
-          ></textarea>
-          <p class="mr-4 text-[#6C757D]">Eng</p>
-        </div>
-
-        <div
-          class="border-[#6C757D] border rounded-lg flex justify-between items-start pt-2 mb-5"
-        >
-          <textarea
-            v-model="quoteKa"
-            required
-            name="quote-ka"
-            class="bg-[#11101A] h-[4.5rem] outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg resize-none"
-            placeholder="ახალი ციტატა"
-          ></textarea>
-          <p class="mr-4 text-[#6C757D]">ქარ</p>
-        </div>
-
-        <div class="rounded-xl my-4 w-full h-[24rem] relative">
-          <label
-            class="bg-[#11101A] p-4 rounded-lg opacity-80 absolute top-[35%] left-[40%] z-10 flex flex-col justify-center items-center"
-            for="image"
-            ><img class="w-1/4" src="@/assets/camera.svg" alt="" />{{
-              $t("change_photo")
-            }}
-          </label>
-          <input
-            @change="handleChange"
-            class="absolute w-[1px] h-[1px] right-1 z-0"
-            id="image"
-            name="image"
-            type="file"
+      <div class="scrollbar-hide overflow-scroll">
+        <div class="flex items-center">
+          <img
+            class="w-[3.75rem] h-[3.75rem] rounded-[50%] object-cover"
+            :src="userImage"
+            alt="profile"
           />
-          <div>
-            <img
-              v-if="chosenImage"
-              class="w-full h-[24rem] object-contain"
-              :src="chosenImage"
-              alt=""
-            />
-            <img
-              v-else
-              class="w-full h-[24rem] object-contain"
-              :src="BACK_URL_IMAGE + '/storage/' + quote.image"
-              alt=""
-            />
-          </div>
+          <p class="text-xl ml-4">{{ username }}</p>
         </div>
+        <form @submit.prevent="updateQuote">
+          <div
+            class="border-[#6C757D] border rounded-lg flex justify-between items-start pt-2 my-5"
+          >
+            <textarea
+              v-model="quoteEn"
+              required
+              name="quote-en"
+              class="bg-[#11101A] h-[4.5rem] outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg resize-none"
+              placeholder="Start create new quote
+"
+            ></textarea>
+            <p class="mr-4 text-[#6C757D]">Eng</p>
+          </div>
 
-        <RedButton class="py-2 rounded-md text-xl w-full">
-          {{ $t("edit_quote") }}
-        </RedButton>
-      </form>
+          <div
+            class="border-[#6C757D] border rounded-lg flex justify-between items-start pt-2 mb-5"
+          >
+            <textarea
+              v-model="quoteKa"
+              required
+              name="quote-ka"
+              class="bg-[#11101A] h-[4.5rem] outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg resize-none"
+              placeholder="ახალი ციტატა"
+            ></textarea>
+            <p class="mr-4 text-[#6C757D]">ქარ</p>
+          </div>
+
+          <div class="rounded-xl my-4 w-full h-[24rem] relative">
+            <label
+              class="bg-[#11101A] p-4 rounded-lg opacity-80 absolute top-[35%] left-[40%] z-10 flex flex-col justify-center items-center"
+              for="image"
+              ><img class="w-1/4" src="@/assets/camera.svg" alt="" />{{
+                $t("change_photo")
+              }}
+            </label>
+            <input
+              @change="handleChange"
+              class="absolute w-[1px] h-[1px] right-1 z-0"
+              id="image"
+              name="image"
+              type="file"
+            />
+            <div>
+              <img
+                v-if="chosenImage"
+                class="w-full h-[24rem] object-contain"
+                :src="chosenImage"
+                alt=""
+              />
+              <img
+                v-else
+                class="w-full h-[24rem] object-contain"
+                :src="BACK_URL_IMAGE + '/storage/' + quote.image"
+                alt=""
+              />
+            </div>
+          </div>
+
+          <RedButton class="py-2 rounded-md text-xl w-full mb-4">
+            {{ $t("edit_quote") }}
+          </RedButton>
+        </form>
+      </div>
     </div>
   </div>
 </template>

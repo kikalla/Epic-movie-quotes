@@ -122,7 +122,7 @@
     @click="showQuoteForm = false"
   >
     <div class="flex">
-      <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
+      <div class="w-1/5 pl-16 pt-6 text-white bg-[#0D0B14]">
         <UserInfo></UserInfo>
         <div
           @click="newsRoute"
@@ -171,7 +171,7 @@
           </div>
         </div>
         <div
-          class="overflow-scroll scrollbar-hide h-[81vh] mt-4"
+          class="overflow-scroll scrollbar-hide h-[75vh] mt-4"
           v-if="show"
           id="quotes"
         >
@@ -297,7 +297,7 @@
               </p>
               <img
                 @click="seeMovie(movie.id)"
-                class="rounded-xl mt-6 w-full h-[28rem] object-cover"
+                class="rounded-xl mt-6 w-full h-[28rem] object-cover cursor-pointer"
                 :src="BACK_URL_IMAGE + '/storage/' + movie.image"
                 alt=""
               />
@@ -320,6 +320,7 @@ import UserInfo from "@/components/layout/UserInfo.vue";
 import router from "@/router/index.js";
 import axiosInstance from "@/config/axios.js";
 import { ref, onBeforeMount, onMounted } from "vue";
+import { useAuthStore } from "@/store.js";
 
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 const BACK_URL_IMAGE = BACK_URL.replace("/api", "");
@@ -347,6 +348,14 @@ function moviesRoute() {
 
 function newsRoute() {
   router.push({ path: "/news-feed" });
+  quotes.value = [];
+  show.value = true;
+  page.value = 1;
+  getQuotes(page.value);
+  page.value++;
+  setTimeout(() => {
+    displayQuotesOnScroll();
+  }, 100);
 }
 
 function seeMovie(movieId) {
@@ -380,11 +389,14 @@ function inputStyle() {
   const searchInput = document.getElementById("searchInput");
   const searchDiv = document.getElementById("searchDiv");
   const quote = document.getElementById("addQuote");
-  if (searchInput.placeholder === "Search by") {
+  if (
+    searchInput.placeholder ===
+    "Enter @ to search movies, Enter # to search quotes"
+  ) {
+    searchInput.placeholder = "Search by";
+  } else {
     searchInput.placeholder =
       "Enter @ to search movies, Enter # to search quotes";
-  } else {
-    searchInput.placeholder = "Search by";
   }
 
   searchDiv.classList.toggle("!w-[49rem]");
@@ -570,24 +582,26 @@ onMounted(() => {
 });
 
 onBeforeMount(() => {
-  getQuotes(page.value);
-  page.value++;
-  axiosInstance.post(BACK_URL + "/get-user-info").then((response) => {
-    if (response.data[0] === "/images/default.jpg") {
-      userImage.value = BACK_URL_IMAGE + response.data[0];
-    } else {
-      userImage.value = BACK_URL_IMAGE + "/storage/" + response.data[0];
-    }
-    username.value = response.data[1];
-  });
-
-  axiosInstance
-    .post(BACK_URL + "/get-movies")
-    .then((response) => {
-      usersMovies.value = response.data;
-    })
-    .catch(() => {
-      router.push({ path: "/error-404" });
+  if (useAuthStore().authenticated) {
+    getQuotes(page.value);
+    page.value++;
+    axiosInstance.post(BACK_URL + "/get-user-info").then((response) => {
+      if (response.data[0] === "/images/default.jpg") {
+        userImage.value = BACK_URL_IMAGE + response.data[0];
+      } else {
+        userImage.value = BACK_URL_IMAGE + "/storage/" + response.data[0];
+      }
+      username.value = response.data[1];
     });
+
+    axiosInstance
+      .post(BACK_URL + "/get-movies")
+      .then((response) => {
+        usersMovies.value = response.data;
+      })
+      .catch(() => {
+        router.push({ path: "/error-404" });
+      });
+  }
 });
 </script>

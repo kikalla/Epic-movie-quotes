@@ -82,7 +82,7 @@
 <script setup>
 import { ref } from "vue";
 import router from "@/router/index.js";
-import axiosInstance from "@/config/axios.js";
+import axios from "axios";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import RedButton from "@/components/ui/RedButton.vue";
 import i18n from "@/i18n";
@@ -105,7 +105,7 @@ function sendResetPasswordLink() {
   const data = {
     email: email.value.trim().toLowerCase(),
   };
-  axiosInstance
+  axios
     .post(BACK_URL + "/forgot/password", data)
     .then(function () {
       router.push({ path: "/reset-sent" });

@@ -2,7 +2,7 @@
   <PageHeader></PageHeader>
   <div class="w-full h-screen pt-24 bg-[#0D0B14]">
     <div class="flex">
-      <div class="w-1/5 h-[80vh] pl-16 pt-6 text-white bg-[#0D0B14]">
+      <div class="w-1/5 pl-16 pt-6 text-white bg-[#0D0B14]">
         <UserInfo></UserInfo>
         <div
           @click="newsRoute"
@@ -52,7 +52,7 @@
         </div>
 
         <div
-          class="grid grid-cols-3 grid-rows-[repeat(auto-fit_,50%)] gap-14 h-[75vh] overflow-scroll scrollbar-hide"
+          class="grid grid-cols-3 grid-rows-[repeat(auto-fit_,25rem)] gap-14 h-[70vh] overflow-scroll scrollbar-hide"
         >
           <div v-for="movie in movies" :key="movie.image">
             <a @click="movieRoute(movie.id)" class="cursor-pointer">

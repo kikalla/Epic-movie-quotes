@@ -6,7 +6,7 @@
     <h2 class="text-white text-4xl mt-5 mb-8 font-medium">
       {{ $t("thank_you") }}!
     </h2>
-    <p class="text-white">{{ $t("Your_account_has_been_activated") }}</p>
+    <p class="text-white">{{ $t("your_account_has_been_activated") }}</p>
     <a
       @mousedown="loginRoute()"
       class="text-white bg-[#E31221] w-full py-2 mt-10 rounded-lg"
