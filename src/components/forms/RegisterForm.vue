@@ -208,7 +208,9 @@
         }}
       </a>
     </div>
-    <div class="flex mt-8">
+    <p class="text-red-600 text-sm my-2">{{ error }}</p>
+
+    <div class="flex">
       <p class="text-[#6C757D] mr-1">{{ $t("already_have_an_account") }}?</p>
       <a class="text-[#0D6EFD] cursor-pointer" @click="loginRoute()">{{
         $t("log_in")
@@ -224,6 +226,7 @@ import axios from "axios";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import RedButton from "@/components/ui/RedButton.vue";
 import i18n from "@/i18n";
+import { useRouter } from "vue-router";
 
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 const username = ref("");
@@ -233,7 +236,10 @@ const closeUsernameButton = ref(null);
 const closeEmailButton = ref(null);
 const form = ref(null);
 const locale = ref(i18n.global.locale);
+const error = ref("");
+const routerUse = useRouter();
 
+error.value = routerUse.currentRoute.value.query.error;
 function loginRoute() {
   router.push({ path: "/login" });
 }

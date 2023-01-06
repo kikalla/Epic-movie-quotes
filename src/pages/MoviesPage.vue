@@ -52,7 +52,7 @@
         </div>
 
         <div
-          class="grid grid-cols-3 grid-rows-[repeat(auto-fit_,50%)] gap-14 h-[75vh] overflow-scroll scrollbar-hide"
+          class="grid grid-cols-3 grid-rows-[repeat(auto-fit_,25rem)] gap-14 h-[70vh] overflow-scroll scrollbar-hide"
         >
           <div v-for="movie in movies" :key="movie.image">
             <a @click="movieRoute(movie.id)" class="cursor-pointer">

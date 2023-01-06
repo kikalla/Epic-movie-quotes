@@ -171,7 +171,7 @@
           </div>
         </div>
         <div
-          class="overflow-scroll scrollbar-hide h-[81vh] mt-4"
+          class="overflow-scroll scrollbar-hide h-[75vh] mt-4"
           v-if="show"
           id="quotes"
         >

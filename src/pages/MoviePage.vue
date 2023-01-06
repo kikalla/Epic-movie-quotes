@@ -19,7 +19,9 @@
         </div>
       </div>
 
-      <div class="w-4/5 pt-8 px-20 bg-[#0D0B14] text-white">
+      <div
+        class="w-4/5 h-[87vh] pt-8 px-20 bg-[#0D0B14] text-white overflow-scroll scrollbar-hide"
+      >
         <div class="flex flex-col mb-14">
           <h2 class="text-2xl font-medium mb-8">
             {{ $t("movie_discription") }}
@@ -76,7 +78,7 @@
           </div>
         </div>
 
-        <div class="overflow-scroll scrollbar-hide h-[26vh]">
+        <div>
           <div
             :id="quote.id + 'delete'"
             v-for="(quote, index) in quotes"

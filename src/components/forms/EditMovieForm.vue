@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-[56rem] h-[58rem] px-8 bg-[#11101A] flex flex-col absolute top-28 left-[33rem] rounded-xl text-white"
+    class="w-1/2 max-h-[58rem] h-[85%] px-8 bg-[#11101A] flex flex-col absolute top-28 left-1/4 rounded-xl text-white"
   >
     <img
       @click="close()"
@@ -13,120 +13,122 @@
       <h2 class="text-2xl font-medium">{{ $t("edit_movie") }}</h2>
       <div class="border-t border-[#efefef] opacity-20 my-6 w-[108%]"></div>
     </div>
-    <div class="flex items-center my-2">
-      <img
-        class="w-[3.75rem] h-[3.75rem] rounded-[50%] object-cover"
-        :src="userImage"
-        alt="profile"
-      />
-      <p class="text-xl ml-4">{{ username }}</p>
+    <div class="scrollbar-hide overflow-scroll">
+      <div class="flex items-center my-2">
+        <img
+          class="w-[3.75rem] h-[3.75rem] rounded-[50%] object-cover"
+          :src="userImage"
+          alt="profile"
+        />
+        <p class="text-xl ml-4">{{ username }}</p>
+      </div>
+      <form @submit.prevent="updateMovie">
+        <div
+          class="border-[#6C757D] border rounded-lg flex justify-between items-center my-5"
+        >
+          <input
+            v-model="titleEn"
+            required
+            class="bg-[#11101A] h-12 outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg"
+            type="text"
+            name="title-en"
+            placeholder="Movie Name"
+          />
+          <p class="mr-4 text-[#6C757D]">Eng</p>
+        </div>
+
+        <div
+          class="border-[#6C757D] border rounded-lg flex justify-between items-center mb-5"
+        >
+          <input
+            v-model="titleKa"
+            required
+            class="bg-[#11101A] h-12 outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg"
+            type="text"
+            name="title-ka"
+            placeholder="ფილმის სახელი"
+          />
+          <p class="mr-4 text-[#6C757D]">ქარ</p>
+        </div>
+
+        <div
+          class="border-[#6C757D] border rounded-lg flex justify-between items-center mb-5"
+        >
+          <input
+            v-model="directorEn"
+            required
+            class="bg-[#11101A] h-12 outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg"
+            type="text"
+            name="director-en"
+            placeholder="Director"
+          />
+          <p class="mr-4 text-[#6C757D]">Eng</p>
+        </div>
+
+        <div
+          class="border-[#6C757D] border rounded-lg flex justify-between items-center mb-5"
+        >
+          <input
+            v-model="directorKa"
+            required
+            class="bg-[#11101A] h-12 outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg"
+            type="text"
+            name="director-ka"
+            placeholder="რეჟისორი"
+          />
+          <p class="mr-4 text-[#6C757D]">ქარ</p>
+        </div>
+
+        <div
+          class="border-[#6C757D] border rounded-lg flex justify-between items-start pt-2 mb-5"
+        >
+          <textarea
+            v-model="descriptionEn"
+            required
+            name="description-en"
+            class="bg-[#11101A] h-[5.5rem] outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg resize-none"
+            placeholder="Movie description"
+          ></textarea>
+          <p class="mr-4 text-[#6C757D]">Eng</p>
+        </div>
+
+        <div
+          class="border-[#6C757D] border rounded-lg flex justify-between items-start pt-2 mb-5"
+        >
+          <textarea
+            v-model="descriptionKa"
+            required
+            name="description-ka"
+            class="bg-[#11101A] h-[5.5rem] outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg resize-none"
+            placeholder="ფილმის აღწერა"
+          ></textarea>
+          <p class="mr-4 text-[#6C757D]">ქარ</p>
+        </div>
+
+        <div
+          class="border-[#6C757D] border rounded-lg flex items-center h-[5.5rem] mb-5"
+        >
+          <img class="mx-4 w-[2rem]" src="@/assets/camera.svg" alt="camera" />
+          <p class="text-xl">{{ $t("drag_drop_your_image_here_or") }}</p>
+          <label
+            class="bg-[#9747FF66] cursor-pointer text-xl p-2 ml-2 z-10"
+            for="image"
+            >{{ $t("choose_file") }}
+          </label>
+
+          <input
+            @change="handleChange"
+            class="w-[1px] h-[1px] relative right-1 z-0"
+            id="image"
+            name="image"
+            type="file"
+          />
+        </div>
+        <RedButton class="py-2 mb-4 rounded-md text-xl w-full">
+          {{ $t("edit_movie") }}
+        </RedButton>
+      </form>
     </div>
-    <form @submit.prevent="updateMovie">
-      <div
-        class="border-[#6C757D] border rounded-lg flex justify-between items-center my-5"
-      >
-        <input
-          v-model="titleEn"
-          required
-          class="bg-[#11101A] h-12 outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg"
-          type="text"
-          name="title-en"
-          placeholder="Movie Name"
-        />
-        <p class="mr-4 text-[#6C757D]">Eng</p>
-      </div>
-
-      <div
-        class="border-[#6C757D] border rounded-lg flex justify-between items-center mb-5"
-      >
-        <input
-          v-model="titleKa"
-          required
-          class="bg-[#11101A] h-12 outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg"
-          type="text"
-          name="title-ka"
-          placeholder="ფილმის სახელი"
-        />
-        <p class="mr-4 text-[#6C757D]">ქარ</p>
-      </div>
-
-      <div
-        class="border-[#6C757D] border rounded-lg flex justify-between items-center mb-5"
-      >
-        <input
-          v-model="directorEn"
-          required
-          class="bg-[#11101A] h-12 outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg"
-          type="text"
-          name="director-en"
-          placeholder="Director"
-        />
-        <p class="mr-4 text-[#6C757D]">Eng</p>
-      </div>
-
-      <div
-        class="border-[#6C757D] border rounded-lg flex justify-between items-center mb-5"
-      >
-        <input
-          v-model="directorKa"
-          required
-          class="bg-[#11101A] h-12 outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg"
-          type="text"
-          name="director-ka"
-          placeholder="რეჟისორი"
-        />
-        <p class="mr-4 text-[#6C757D]">ქარ</p>
-      </div>
-
-      <div
-        class="border-[#6C757D] border rounded-lg flex justify-between items-start pt-2 mb-5"
-      >
-        <textarea
-          v-model="descriptionEn"
-          required
-          name="description-en"
-          class="bg-[#11101A] h-[5.5rem] outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg resize-none"
-          placeholder="Movie description"
-        ></textarea>
-        <p class="mr-4 text-[#6C757D]">Eng</p>
-      </div>
-
-      <div
-        class="border-[#6C757D] border rounded-lg flex justify-between items-start pt-2 mb-5"
-      >
-        <textarea
-          v-model="descriptionKa"
-          required
-          name="description-ka"
-          class="bg-[#11101A] h-[5.5rem] outline-none ml-2 w-11/12 placeholder:text-white placeholder:text-lg resize-none"
-          placeholder="ფილმის აღწერა"
-        ></textarea>
-        <p class="mr-4 text-[#6C757D]">ქარ</p>
-      </div>
-
-      <div
-        class="border-[#6C757D] border rounded-lg flex items-center h-[5.5rem] mb-5"
-      >
-        <img class="mx-4 w-[2rem]" src="@/assets/camera.svg" alt="camera" />
-        <p class="text-xl">{{ $t("drag_drop_your_image_here_or") }}</p>
-        <label
-          class="bg-[#9747FF66] cursor-pointer text-xl p-2 ml-2 z-10"
-          for="image"
-          >{{ $t("choose_file") }}
-        </label>
-
-        <input
-          @change="handleChange"
-          class="w-[1px] h-[1px] relative right-1 z-0"
-          id="image"
-          name="image"
-          type="file"
-        />
-      </div>
-      <RedButton class="py-2 rounded-md text-xl w-full">
-        {{ $t("edit_movie") }}
-      </RedButton>
-    </form>
   </div>
 </template>
 
