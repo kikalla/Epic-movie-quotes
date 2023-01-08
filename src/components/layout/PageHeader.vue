@@ -4,12 +4,9 @@
   >
     <h2 class="text-[#DDCCAA] text-base font-medium">MOVIE QUOTES</h2>
     <div class="flex items-center">
-      <img
-        v-if="authStore.authenticated"
-        class="w-6"
-        src="@/assets/bell.svg"
-        alt="bell"
-      />
+      <div class="relative">
+        <NotificationsField></NotificationsField>
+      </div>
       <select
         name="lang"
         id="lang"
@@ -48,6 +45,7 @@
 <script setup>
 import router from "@/router/index.js";
 import RedButton from "@/components/ui/RedButton.vue";
+import NotificationsField from "@/components/layout/NotificationsField.vue";
 import { useAuthStore } from "@/store.js";
 import axios from "axios";
 import { setLocale } from "@vee-validate/i18n";

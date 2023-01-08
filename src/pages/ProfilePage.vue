@@ -429,7 +429,6 @@ function addEmail() {
     })
     .then(() => {
       emails.value.push(newEmail.value);
-      console.log(emails.value);
       errorMessage.value = "";
     })
     .catch((error) => {
