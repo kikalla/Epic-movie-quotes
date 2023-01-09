@@ -175,7 +175,6 @@ onMounted(() => {
   window.Echo.channel("notifications." + authStore.userId).listen(
     "NotificationCreated",
     (e) => {
-      console.log(e.notification.id);
       if (notifications.value === null) {
         notifications.value = [];
       }
