@@ -11,9 +11,12 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@mahdikhashan/vue3-click-outside": "^0.1.2",
     "@vee-validate/i18n": "^4.7.3",
     "@vee-validate/rules": "^4.7.3",
+    "laravel-echo": "^1.14.2",
     "pinia": "^2.0.23",
+    "pusher-js": "^8.0.0",
     "tailwind-scrollbar-hide": "^1.1.7",
     "time-diff-for-humans": "^1.0.3",
     "vee-validate": "^4.7.3",
